@@ -1,0 +1,25 @@
+name: verify
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  local-verification:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+      - name: Install lint and container prerequisites
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y podman
+          go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.11.1
+      - name: Check formatting, lint, unit tests and real Podman execution
+        run: make fmt-check lint test e2e

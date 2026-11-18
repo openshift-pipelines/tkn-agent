@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "status": "specified-not-executable",
+  "cases": [
+    {
+      "id": "EVAL-WORKTREE-CLEAN",
+      "feature_ids": ["STEP", "WS"],
+      "scenarios": ["LOCAL-001"],
+      "pipeline": "fixtures/worktree-check.yaml",
+      "worktree": {"state": "committed", "files": {"message.txt": "valid\n"}},
+      "required_steps": ["check/message"],
+      "expected": {"outcome": "passed", "passed_steps": ["check/message"], "stdout_contains": "message accepted"}
+    },
+    {
+      "id": "EVAL-WORKTREE-DEFECT",
+      "feature_ids": ["STEP", "WS"],
+      "scenarios": ["LOCAL-002"],
+      "pipeline": "fixtures/worktree-check.yaml",
+      "worktree": {"state": "committed", "files": {"message.txt": "invalid\n"}},
+      "required_steps": ["check/message"],
+      "expected": {"outcome": "failed", "failed_steps": ["check/message"], "stdout_excludes": "message accepted"}
+    },
+    {
+      "id": "EVAL-WORKTREE-STAGED",
+      "feature_ids": ["STEP", "WS"],
+      "scenarios": ["LOCAL-003"],
+      "pipeline": "fixtures/worktree-check.yaml",
+      "worktree": {"state": "staged", "base_files": {"message.txt": "valid\n"}, "files": {"message.txt": "invalid\n"}},
+      "required_steps": ["check/message"],
+      "expected": {"outcome": "failed", "failed_steps": ["check/message"]}
+    },
+    {
+      "id": "EVAL-WORKTREE-UNSTAGED",
+      "feature_ids": ["STEP", "WS"],
+      "scenarios": ["LOCAL-003"],
+      "pipeline": "fixtures/worktree-check.yaml",
+      "worktree": {"state": "unstaged", "base_files": {"message.txt": "valid\n"}, "files": {"message.txt": "invalid\n"}},
+      "required_steps": ["check/message"],
+      "expected": {"outcome": "failed", "failed_steps": ["check/message"]}
+    },
+    {
+      "id": "EVAL-WORKTREE-UNTRACKED",
+      "feature_ids": ["STEP", "WS"],
+      "scenarios": ["LOCAL-003"],
+      "pipeline": "fixtures/worktree-check.yaml",
+      "worktree": {"state": "untracked", "base_files": {}, "files": {"message.txt": "invalid\n"}},
+      "required_steps": ["check/message"],
+      "expected": {"outcome": "failed", "failed_steps": ["check/message"]}
+    },
+    {
+      "id": "EVAL-REVIEW-NONINTERACTIVE",
+      "feature_ids": ["STEP"],
+      "scenarios": ["LOCAL-014"],
+      "pipeline": "fixtures/worktree-check.yaml",
+      "worktree": {"state": "committed", "files": {"message.txt": "valid\n"}},
+      "review_state": "unreviewed",
+      "interaction_mode": "noninteractive",
+      "expected": {"outcome": "blocked", "executed_steps": [], "reason_identifies": "plan review required"}
+    },
+    {
+      "id": "EVAL-REVIEW-ACCEPTED-REUSE",
+      "feature_ids": ["STEP"],
+      "scenarios": ["LOCAL-006", "LOCAL-014"],
+      "pipeline": "fixtures/worktree-check.yaml",
+      "worktree": {"state": "committed", "files": {"message.txt": "valid\n"}},
+      "review_state": "accepted-unchanged-plan",
+      "interaction_mode": "noninteractive",
+      "planner_availability": "unavailable",
+      "required_steps": ["check/message"],
+      "expected": {"outcome": "passed", "passed_steps": ["check/message"], "model_calls": 0, "review_prompts": 0}
+    },
+    {
+      "id": "EVAL-IMAGE-INTERPRETER-MISMATCH",
+      "feature_ids": ["STEP"],
+      "scenarios": ["LOCAL-008", "LOCAL-009"],
+      "pipeline": "fixtures/worktree-check.yaml",
+      "worktree": {"state": "committed", "files": {"message.txt": "valid\n"}},
+      "invalid_plan_override": {"step": "check/message", "shell": "bash"},
+      "expected": {"outcome": "blocked", "check_execution_receipts": [], "reason_identifies": "interpreter unavailable or inconsistent with source"}
+    },
+    {
+      "id": "EVAL-SIDECAR-UNSUPPORTED",
+      "feature_ids": ["SIDE"],
+      "scenarios": ["LOCAL-005"],
+      "pipeline": "fixtures/sidecar-required.yaml",
+      "selected_steps": ["service-check/query"],
+      "expected": {
+        "outcome": "blocked",
+        "executed_steps": [],
+        "reason_identifies": "required sidecar service",
+        "applies_when": "sidecar execution is outside the accepted implementation scope"
+      }
+    }
+  ]
+}

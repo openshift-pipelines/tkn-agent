@@ -1,0 +1,4 @@
+# Local execution and evaluation evidence
+/artifacts/
+/bin/
+/coverage.out

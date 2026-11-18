@@ -1,0 +1,29 @@
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  name: local-worktree-check
+spec:
+  pipelineSpec:
+    workspaces:
+      - name: source
+    tasks:
+      - name: check
+        workspaces:
+          - name: source
+            workspace: source
+        taskSpec:
+          workspaces:
+            - name: source
+          steps:
+            - name: message
+              image: docker.io/library/alpine@sha256:49340b346798875b5592e5d420241f2f9cfba5f47e62ebb1446a1b34734e898f
+              workingDir: $(workspaces.source.path)
+              script: |
+                #!/bin/sh
+                set -eu
+                grep -qx valid message.txt
+                printf 'message accepted\n'
+  workspaces:
+    - name: source
+      persistentVolumeClaim:
+        claimName: eval-source

@@ -1,6 +1,32 @@
 # Tests derived from the specification
 
-Status: planned strategy. No executable test suite exists yet.
+Status: the first Go workflow has executable unit and real-Podman acceptance tests.
+Broader compatibility and live-model evaluations remain planned.
+
+## Runnable checks
+
+`make build` builds the actual CLI. `make fmt-check lint test e2e` runs formatting,
+the checked-in golangci-lint configuration, race-enabled tests, and actual Podman
+execution. E2E tests require an existing working Podman connection and network
+access for the pinned fixture image. Runtime failures fail the suite.
+
+`test/e2e/verify_test.go` owns LOCAL-001/002/006/010/014 for the mixed-check fixture:
+recorded-provider selection, no execution before review, real accepted execution,
+an untracked defect through the hook without credentials or another model call,
+and renewed review after a definition change. It also covers missing image
+interpreters and deadline cleanup under LOCAL-009. This is one bounded fixture,
+not completion of every variant in those scenarios.
+
+`internal/plan` covers unknown steps, command replacement, heavy-work rejection,
+and definition/helper cache invalidation (LOCAL-007/008).
+The heavy-operation guard was deliberately removed locally: its regression test
+failed on the forbidden image-build selection, then the guard was restored.
+`internal/source` covers explicit unsupported prerequisites; `internal/agent`
+covers recorded provider/tool responses, input limits and credential/path boundaries.
+
+Provider-live selection quality, native Tekton equivalence, staged-source variants,
+general feature-matrix coverage, and remote CI results are not established by
+these tests.
 
 ## Start from the user-visible contract
 

@@ -1,0 +1,6 @@
+- id: tkn-agent-verify
+  name: Verify the reviewed local Tekton scope
+  entry: tkn-agent verify --local
+  language: system
+  pass_filenames: false
+  always_run: true

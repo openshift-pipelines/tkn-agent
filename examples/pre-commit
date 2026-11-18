@@ -1,0 +1,5 @@
+#!/bin/sh
+set -eu
+
+: "${TKN_AGENT_PIPELINE:?Set TKN_AGENT_PIPELINE to a pipeline path}"
+exec tkn-agent verify --local "$TKN_AGENT_PIPELINE" --format "${TKN_AGENT_FORMAT:-text}"

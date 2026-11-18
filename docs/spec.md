@@ -2,8 +2,9 @@
 
 Status: draft with accepted command and review policy. Revision: 0.2, 2026-11-18.
 
-This document describes intended behavior. Every scenario is planned; none is
-implemented or verified by this repository yet.
+This document describes the broader intended behavior. The implemented subset
+and executable evidence are recorded in `first-slice.md` and `testing.md`.
+Do not treat a scenario as fully covered merely because one variant is tested.
 
 ## Problem and outcome
 
@@ -48,6 +49,7 @@ Proposals requiring review:
 
 ```sh
 tkn-agent verify --local .tekton/checks.yaml
+# Proposed future explicit-selection interface, not implemented in the first slice:
 tkn-agent verify --local .tekton/checks.yaml --steps task/check
 ```
 
@@ -155,8 +157,9 @@ slice. Coverage and timing statements require stored execution evidence.
 - Specify review UI/acceptance storage, exit outcomes, and report interface
   before treating the CLI interface as stable. Command naming and review of
   new/changed plans are accepted above.
-- Select the ADK, provider/authentication path, supported Go version, and license.
-  Google ADK Go is a candidate, not an accepted dependency.
+- The first slice uses Google ADK Go, explicit provider API credentials, and
+  Go 1.26.10. Broader provider-quality guarantees and the project license remain
+  decisions; the deterministic recorded-provider suite is not a live-model eval.
 - Set execution policy for worktree writes, network, and secret forwarding.
   Unattended runs must honor the accepted-plan requirement. Read-only planner
   tools do not sandbox the executor.

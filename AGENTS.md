@@ -4,8 +4,8 @@
 
 Read `README.md`, `docs/spec.md`, and `docs/testing.md` before changing behavior.
 Use `docs/spec-workflow.md` when proposing or implementing a specification change.
-The current repository contains draft requirements, not an implemented CLI.
-Never describe a proposed command or planned scenario as available or passing.
+The first executable boundary is documented in `docs/first-slice.md`.
+Never describe broader proposed commands or planned scenarios as available or passing.
 
 ## Scope and decisions
 
@@ -56,3 +56,5 @@ Do not commit, push, publish releases, create PRs, or send external messages
 without explicit authorization. Use the identity and publication rules supplied
 by the maintainer's current environment. Never publish credentials or internal
 tracking context.
+
+Do not add automated AI co-author trailers to commits.

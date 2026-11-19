@@ -9,13 +9,16 @@ exactly what was checked. Cluster CI remains authoritative.
 
 ## Current state
 
-The Go CLI implements a deliberately small workflow: select supported independent
-inline checks, review their exact plan, and replay it through existing Podman.
+The local verification workflow selects supported independent inline checks,
+reviews their exact plan, and replays it through existing Podman.
 Explicit reviewed self-checkout bindings support the pinned real pipeline case.
-General remote execution and Kubernetes-dependent execution remain unsupported.
+General remote execution and Kubernetes-dependent execution remain unsupported
+by `verify`.
+The separate diagnostic `workup` PoC is described below.
 
-Prerequisites: Go 1.26.10 or automatic Go toolchain selection, Git, reachable
-Podman, and an explicitly configured model for first-time planning.
+Prerequisites for local verification: Go 1.26.10 or automatic Go toolchain
+selection, Git, reachable Podman, and an explicitly configured model for
+first-time planning. Podman is specific to local verification.
 
 ```sh
 make build
@@ -93,6 +96,23 @@ access and linux/amd64 execution support. `TKN_AGENT_REAL_SOURCE` can point to a
 existing checkout as a clone source; tests mutate only a fresh private clone.
 
 ## Start here
+
+The separate [`workup` PoC](examples/workup/README.md) investigates a supplied
+operational goal using selected skills, configured MCP evidence tools, and
+approved diagnostic Pipelines on an explicitly selected cluster. The ADK loop
+makes the model calls and chooses which Pipelines to run; Tekton executes those
+checks and returns actual results for subsequent reasoning. See its
+[draft contract and WORKUP scenarios](docs/workup.md) for policy, limits and
+unsupported behavior. This does not extend `verify --local` to cluster execution.
+
+```sh
+tkn agent workup "Investigate the named failed build" \
+  --config=/absolute/path/to/workup.yaml \
+  --kubeconfig=/absolute/path/to/test-kubeconfig \
+  --context=explicit-test-context --namespace=diagnostics \
+  --provider=openai --model=explicit-model-name --format=json
+# Review the bounded configuration/policy; add --execute to authorize execution.
+```
 
 - [Behavior specification](docs/spec.md): scope, guarantees, command contract,
   acceptance scenarios, and open decisions.

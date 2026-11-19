@@ -1,7 +1,8 @@
 # Tests derived from the specification
 
 Status: the first Go workflow has executable unit and real-Podman acceptance tests.
-Broader compatibility and live-model evaluations remain planned.
+Broader local-verification compatibility and live-model evaluations remain
+planned. The separate workup evaluation is described below.
 
 The bounded real case is now driven by `make real-e2e`. It clones the pinned
 public pipeline-service source into a private directory and runs its original
@@ -44,6 +45,42 @@ covers recorded provider/tool responses, input limits and credential/path bounda
 Provider-live selection quality, native Tekton equivalence, staged-source variants,
 general feature-matrix coverage, and remote CI results are not established by
 these tests.
+
+## Diagnostic workup
+
+`internal/workup` covers WORKUP-001 through WORKUP-010 using the actual ADK skill,
+MCP and model interfaces with local wire responses and a native-client API shim.
+It covers successive selection, review-only operation, denied policy expansion,
+missing required configuration/tools/results, native failure, cancellation,
+duplicate invocation receipts, credential redaction and stdio environment scope.
+The full MCP discovery catalog has a separate wire budget from selected
+evidence/model context; its oversized-catalog regression was observed red before
+the transport fix and green afterward.
+
+`make workup-live` is an explicit paid-model and actual-cluster evaluation, not
+ordinary CI. It requires the environment listed in
+[`examples/workup/README.md`](../examples/workup/README.md).
+`test/workup/live_test.go` invokes the built CLI, requires both diagnostic
+procedures, verifies target and control identities and results, and independently
+compares every reported result with the native PipelineRun. It also requires
+actual resource/log MCP receipts and provider-reported usage. Missing
+prerequisites fail rather than skip the requested suite.
+
+Run `golangci-lint run --build-tags=workup_live ./...` to include that explicit
+evaluation's Go code in lint. Standard CI retains `make fmt-check lint test e2e`;
+it neither requires provider credentials nor provisions a cluster for workup.
+
+The native-home regression checks workspace/cache cleanup in the deterministic
+suite. With an existing `kubectl`, run
+`go test -race -tags=native_client -run TestRealNativeClientUsesPrivateHomeAndCleansDiscovery ./internal/workup`
+to exercise the actual client against a local TLS API fixture with an explicit
+fixture identity. It requires no external cluster or paid model.
+
+Live CLI QA additionally checks a distinct successful target, review-only
+planning with unchanged native run count, and required context denied by the MCP
+server. A protocol-successful 403 payload must still produce incomplete evidence
+and exit 2, with no diagnostic execution in the denied-context scenario.
+The PoC records the actual observations separately from these scenario contracts.
 
 ## Start from the user-visible contract
 

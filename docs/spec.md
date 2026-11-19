@@ -173,3 +173,11 @@ This specification does not authorize changing outer-loop CI requirements,
 replacing Kubernetes/Tekton semantics generally, fetching cluster credentials,
 or creating deployment, signing, release, MCP, or RAG capabilities.
 Static YAML validity alone is not an executed local verification.
+
+## Separate diagnostic capability
+
+The requested `workup` capability is specified separately in
+[`workup.md`](workup.md), with its own WORKUP scenarios and explicit cluster,
+skills, MCP, and execution policy. That proposal is included for review with its
+PoC. It does not broaden `verify --local` or authorize cluster access from local
+verification.

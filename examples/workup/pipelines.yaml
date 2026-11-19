@@ -1,0 +1,234 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: workup-reader
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: workup-launcher
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: workup-evidence-reader
+rules:
+  - apiGroups: ["tekton.dev"]
+    resources: ["pipelines", "pipelineruns", "taskruns"]
+    verbs: ["get", "list"]
+  - apiGroups: [""]
+    resources: ["pods", "pods/log", "events"]
+    verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: workup-evidence-reader
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: workup-evidence-reader
+subjects:
+  - kind: ServiceAccount
+    name: workup-reader
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: workup-launcher
+rules:
+  - apiGroups: ["tekton.dev"]
+    resources: ["pipelines"]
+    verbs: ["get"]
+  - apiGroups: ["tekton.dev"]
+    resources: ["pipelineruns"]
+    verbs: ["get", "list", "watch", "create", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: workup-launcher
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: workup-launcher
+subjects:
+  - kind: ServiceAccount
+    name: workup-launcher
+---
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: sample-build
+spec:
+  params:
+    - name: BUILD_TARGET
+      type: string
+      default: ""
+  tasks:
+    - name: validate-build-config
+      taskSpec:
+        steps:
+          - name: validate
+            image: docker.io/library/busybox@sha256:73aaf090f3d85aa34ee199857f03fa3a95c8ede2ffd4cc2cdb5b94e566b11662
+            env:
+              - name: BUILD_TARGET
+                value: $(params.BUILD_TARGET)
+            script: |
+              #!/bin/sh
+              set -eu
+              if [ -z "$BUILD_TARGET" ]; then
+                echo 'ERROR: required environment variable BUILD_TARGET is unset.' >&2
+                exit 42
+              fi
+              printf 'Configuration accepted for target %s\n' "$BUILD_TARGET"
+---
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: inspect-build-state
+  annotations:
+    description: Inspect the actual execution and failed step exit codes of a PipelineRun.
+spec:
+  params:
+    - name: target
+      type: string
+  results:
+    - name: evidence
+      value: $(tasks.inspect.results.evidence)
+  tasks:
+    - name: inspect
+      taskSpec:
+        results:
+          - name: evidence
+        steps:
+          - name: inspect
+            image: docker.io/library/python@sha256:c5ba3deef00c7758561a0f03c26f44f10589263d40e732b8748e0d1f38f6dd89
+            env:
+              - name: TARGET
+                value: $(params.target)
+              - name: NAMESPACE
+                valueFrom:
+                  fieldRef:
+                    fieldPath: metadata.namespace
+            script: |
+              #!/usr/bin/env python3
+              import json, os, pathlib, ssl, urllib.parse, urllib.request
+              sa = pathlib.Path("/var/run/secrets/kubernetes.io/serviceaccount")
+              tls = ssl.create_default_context(cafile=str(sa / "ca.crt"))
+              base = "https://" + os.environ["KUBERNETES_SERVICE_HOST"] + ":" + os.environ["KUBERNETES_SERVICE_PORT_HTTPS"]
+              headers = {"Authorization": "Bearer " + (sa / "token").read_text()}
+              ns = urllib.parse.quote(os.environ["NAMESPACE"], safe="")
+              target = os.environ["TARGET"]
+              def get(path):
+                  request = urllib.request.Request(base + path, headers=headers)
+                  with urllib.request.urlopen(request, context=tls, timeout=20) as response:
+                      return json.load(response)
+              prefix = "/apis/tekton.dev/v1/namespaces/" + ns
+              run = get(prefix + "/pipelineruns/" + urllib.parse.quote(target, safe=""))
+              selector = urllib.parse.urlencode({"labelSelector": "tekton.dev/pipelineRun=" + target})
+              tasks = get(prefix + "/taskruns?" + selector)["items"]
+              evidence = {
+                  "source": "kubernetes",
+                  "namespace": os.environ["NAMESPACE"],
+                  "pipelinerun": target,
+                  "uid": run["metadata"]["uid"],
+                  "conditions": run.get("status", {}).get("conditions", []),
+                  "steps": [
+                      {"taskrun": task["metadata"]["name"], "step": step["name"],
+                       "exitCode": step["terminated"]["exitCode"],
+                       "reason": step["terminated"].get("reason", "")}
+                      for task in tasks for step in task.get("status", {}).get("steps", [])
+                      if "terminated" in step
+                  ],
+              }
+              pathlib.Path("/tekton/results/evidence").write_text(json.dumps(evidence))
+              print(json.dumps(evidence))
+---
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: inspect-build-inputs
+  annotations:
+    description: Compare effective BUILD_TARGET inputs of the target and a named passing control, including actual control state and logs.
+spec:
+  params:
+    - name: target
+      type: string
+    - name: control
+      type: string
+  results:
+    - name: evidence
+      value: $(tasks.inspect.results.evidence)
+    - name: control-evidence
+      value: $(tasks.inspect.results.control-evidence)
+  tasks:
+    - name: inspect
+      taskSpec:
+        results:
+          - name: evidence
+          - name: control-evidence
+        steps:
+          - name: inspect
+            image: docker.io/library/python@sha256:c5ba3deef00c7758561a0f03c26f44f10589263d40e732b8748e0d1f38f6dd89
+            env:
+              - name: TARGET
+                value: $(params.target)
+              - name: CONTROL
+                value: $(params.control)
+              - name: NAMESPACE
+                valueFrom:
+                  fieldRef:
+                    fieldPath: metadata.namespace
+            script: |
+              #!/usr/bin/env python3
+              import json, os, pathlib, ssl, urllib.parse, urllib.request
+              sa = pathlib.Path("/var/run/secrets/kubernetes.io/serviceaccount")
+              tls = ssl.create_default_context(cafile=str(sa / "ca.crt"))
+              base = "https://" + os.environ["KUBERNETES_SERVICE_HOST"] + ":" + os.environ["KUBERNETES_SERVICE_PORT_HTTPS"]
+              headers = {"Authorization": "Bearer " + (sa / "token").read_text()}
+              ns = urllib.parse.quote(os.environ["NAMESPACE"], safe="")
+              def get(path):
+                  request = urllib.request.Request(base + path, headers=headers)
+                  with urllib.request.urlopen(request, context=tls, timeout=20) as response:
+                      return json.load(response)
+              prefix = "/apis/tekton.dev/v1/namespaces/" + ns
+              def input_evidence(name):
+                  run = get(prefix + "/pipelineruns/" + urllib.parse.quote(name, safe=""))
+                  spec = run["spec"]
+                  pipeline = spec.get("pipelineSpec")
+                  if pipeline is None:
+                      pipeline = get(prefix + "/pipelines/" + urllib.parse.quote(spec["pipelineRef"]["name"], safe=""))["spec"]
+                  defaults = {p["name"]: p.get("default") for p in pipeline.get("params", [])}
+                  actual = {p["name"]: p["value"] for p in spec.get("params", [])}
+                  value = actual.get("BUILD_TARGET", defaults.get("BUILD_TARGET"))
+                  return {
+                      "source": "kubernetes",
+                      "namespace": os.environ["NAMESPACE"],
+                      "pipelinerun": name,
+                      "uid": run["metadata"]["uid"],
+                      "conditions": run.get("status", {}).get("conditions", []),
+                      "BUILD_TARGET_present": value is not None and value != "",
+                      "input_origin": "explicit parameter" if "BUILD_TARGET" in actual else "pipeline default",
+                      "build_target_env_declared": any(
+                          env.get("name") == "BUILD_TARGET"
+                          for task in pipeline.get("tasks", [])
+                          for step in task.get("taskSpec", {}).get("steps", [])
+                          for env in step.get("env", [])
+                      ),
+                  }
+              evidence = input_evidence(os.environ["TARGET"])
+              control = input_evidence(os.environ["CONTROL"])
+              selector = urllib.parse.urlencode({"labelSelector": "tekton.dev/pipelineRun=" + os.environ["CONTROL"]})
+              pods = get("/api/v1/namespaces/" + ns + "/pods?" + selector)["items"]
+              if len(pods) != 1:
+                  raise RuntimeError("Expected exactly one sample-build control Pod")
+              pod = urllib.parse.quote(pods[0]["metadata"]["name"], safe="")
+              query = urllib.parse.urlencode({"container": "step-validate", "tailLines": 20, "limitBytes": 4096})
+              request = urllib.request.Request(base + "/api/v1/namespaces/" + ns + "/pods/" + pod + "/log?" + query, headers=headers)
+              with urllib.request.urlopen(request, context=tls, timeout=20) as response:
+                  control["log_excerpt"] = response.read(4096).decode("utf-8")
+              pathlib.Path("/tekton/results/evidence").write_text(json.dumps(evidence))
+              pathlib.Path("/tekton/results/control-evidence").write_text(json.dumps(control))
+              print(json.dumps(evidence))
+              print(json.dumps(control))

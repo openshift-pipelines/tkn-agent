@@ -14,7 +14,8 @@ import (
 	"google.golang.org/genai"
 )
 
-func provider(ctx context.Context, name, modelName string) (model.LLM, error) {
+// Provider constructs the shared explicitly configured ADK provider.
+func Provider(ctx context.Context, name, modelName string) (model.LLM, error) {
 	if strings.TrimSpace(modelName) == "" {
 		return nil, errors.New("an explicit model name is required")
 	}

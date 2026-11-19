@@ -39,7 +39,9 @@ func TestLiveWorkup(t *testing.T) {
 	goal := "Investigate PipelineRun " + settings["WORKUP_TARGET"] +
 		", UID " + settings["WORKUP_TARGET_UID"] +
 		", source kubernetes, namespace " + settings["WORKUP_NAMESPACE"] +
-		". Execute native diagnostic procedures: verify actual per-step exit status through one procedure, " +
+		". Start with the configured investigation skill and evidence MCP: retrieve the target's full YAML and actual logs " +
+		"before choosing diagnostic Pipelines. " +
+		"Then execute native diagnostic procedures: verify actual per-step exit status through one procedure, " +
 		"and independently compare effective build input against the passing control through another. " +
 		"Choose the appropriate Pipelines from the reviewed catalog; an MCP-only explanation does not fulfill this request. " +
 		"The matching passing control is " + settings["WORKUP_CONTROL"] + ", UID " + settings["WORKUP_CONTROL_UID"] +
@@ -85,6 +87,10 @@ func TestLiveWorkup(t *testing.T) {
 		var evidence struct {
 			PipelineRun string `json:"pipelinerun"`
 			UID         string `json:"uid"`
+			Present     *bool  `json:"BUILD_TARGET_present"`
+			Steps       []struct {
+				ExitCode int `json:"exitCode"`
+			} `json:"steps"`
 		}
 		if err := json.Unmarshal([]byte(raw), &evidence); err != nil {
 			t.Fatalf("invalid diagnostic JSON: %v", err)
@@ -92,7 +98,13 @@ func TestLiveWorkup(t *testing.T) {
 		if evidence.PipelineRun != settings["WORKUP_TARGET"] || evidence.UID != settings["WORKUP_TARGET_UID"] {
 			t.Fatalf("diagnostic targeted a different workload: %+v", evidence)
 		}
+		if run.Pipeline == "inspect-build-state" && (len(evidence.Steps) != 1 || evidence.Steps[0].ExitCode != 42) {
+			t.Fatalf("diagnostic did not establish the seeded exit-42 failure: %+v", evidence)
+		}
 		if run.Pipeline == "inspect-build-inputs" {
+			if evidence.Present == nil || *evidence.Present {
+				t.Fatalf("diagnostic did not establish the missing build input: %+v", evidence)
+			}
 			var controlText string
 			if err := json.Unmarshal(run.Results["control-evidence"], &controlText); err != nil {
 				t.Fatalf("required native control comparison absent: %v", err)

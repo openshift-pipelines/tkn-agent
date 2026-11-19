@@ -124,6 +124,38 @@ Run a separate workup against the printed passing control. It must not report
 the missing-input defect for that control. Missing tools, denied reads, failed
 diagnostics or absent required results must remain incomplete/failed evidence.
 
+## Demo: diagnose the failure and verify the correction
+
+Use the target/control names and UIDs printed by setup and the native API, with
+the reviewed configuration and scoped launcher connection described above.
+The goal names the problem and evidence sources, not the diagnostic Pipelines:
+
+```sh
+sh examples/workup/run.sh \
+  "Investigate PipelineRun $WORKUP_TARGET, UID $WORKUP_TARGET_UID, source kubernetes, namespace $WORKUP_NAMESPACE. Start with the configured investigation skill and retrieve the target YAML and actual logs through evidence MCP. Then choose and execute the approved diagnostic Pipelines needed to explain the failure. Compare against passing control $WORKUP_CONTROL, UID $WORKUP_CONTROL_UID. Explain the cause and recommend a fix. Do not modify or retry either workload."
+```
+
+The expected evidence is the target's exit 42 and absent `BUILD_TARGET`, compared
+with the control's present input, successful status and configuration log. Check
+the report for actual MCP calls and native diagnostic receipts; an explanation
+without those observations does not demonstrate this flow.
+
+After reviewing the diagnosis, the operator can supply the missing input in a
+new build using the example control definition, which sets `BUILD_TARGET=demo`:
+
+```sh
+corrected=$(kubectl --kubeconfig="$KUBECONFIG" --context="$KUBE_CONTEXT" \
+  --namespace="$WORKUP_NAMESPACE" create -f examples/workup/control-build.yaml \
+  -o jsonpath='{.metadata.name}')
+kubectl --kubeconfig="$KUBECONFIG" --context="$KUBE_CONTEXT" \
+  --namespace="$WORKUP_NAMESPACE" wait "pipelinerun/$corrected" \
+  --for=condition=Succeeded=True --timeout=180s
+```
+
+This demonstrates diagnosis, a reviewed manual correction and verification of
+the new build. The failed target remains available as evidence. Workup does not
+automatically apply remediation or choose a remediation Pipeline.
+
 ## Completion boundary
 
 This proves a bounded configured runtime and test fixture, not production

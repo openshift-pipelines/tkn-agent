@@ -36,9 +36,14 @@ func copySource(ctx context.Context, root, destination string) (result snapshot,
 		Path string
 		Hash string
 		Mode uint32
+		Link string `json:",omitempty"`
 	}
 	var manifest []entry
 	seen := make(map[string]bool)
+	available := make(map[string]bool)
+	for _, name := range names {
+		available[name] = true
+	}
 	for _, name := range names {
 		if name == "" || seen[name] {
 			continue
@@ -57,12 +62,38 @@ func copySource(ctx context.Context, root, destination string) (result snapshot,
 		if err != nil {
 			return snapshot{}, err
 		}
-		if !info.Mode().IsRegular() {
-			return snapshot{}, fmt.Errorf("%s: only regular source files are supported; symlinks/submodules require assessment", name)
-		}
 		target := filepath.Join(destination, name)
 		if err := os.MkdirAll(filepath.Dir(target), 0o755); err != nil {
 			return snapshot{}, err
+		}
+		if info.Mode()&os.ModeSymlink != 0 {
+			link, err := directory.Readlink(name)
+			if err != nil {
+				return snapshot{}, err
+			}
+			relativeTarget := filepath.Clean(filepath.Join(filepath.Dir(name), link))
+			resolved, err := filepath.EvalSymlinks(filepath.Join(root, name))
+			if err != nil {
+				return snapshot{}, fmt.Errorf("resolve source link %s: %w", name, err)
+			}
+			final, err := filepath.Rel(root, resolved)
+			if err != nil || filepath.IsAbs(link) || !filepath.IsLocal(relativeTarget) ||
+				!filepath.IsLocal(final) || !available[relativeTarget] || !available[final] {
+				return snapshot{}, fmt.Errorf("%s: source link must stay within included repository files", name)
+			}
+			resolvedInfo, err := os.Stat(resolved)
+			if err != nil || !resolvedInfo.Mode().IsRegular() {
+				return snapshot{}, fmt.Errorf("%s: directory or unavailable source link is not supported", name)
+			}
+			if err := os.Symlink(link, target); err != nil {
+				return snapshot{}, err
+			}
+			sum := sha256.Sum256([]byte("link:" + link))
+			manifest = append(manifest, entry{Path: name, Hash: hex.EncodeToString(sum[:]), Mode: uint32(info.Mode().Perm()), Link: link})
+			continue
+		}
+		if !info.Mode().IsRegular() {
+			return snapshot{}, fmt.Errorf("%s: non-file source input is not supported", name)
 		}
 		from, err := directory.Open(name)
 		if err != nil {

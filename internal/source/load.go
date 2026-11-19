@@ -16,7 +16,8 @@ import (
 
 // Load inventories one PipelineRun or Pipeline and same-file Task/Pipeline refs.
 // Unsupported execution features are reported on their steps, never discarded.
-func Load(ctx context.Context, root, filename string) (inventory Inventory, resultErr error) {
+func Load(ctx context.Context, request Request) (inventory Inventory, resultErr error) {
+	root, filename := request.Root, request.Pipeline
 	if err := ctx.Err(); err != nil {
 		return Inventory{}, err
 	}
@@ -39,11 +40,18 @@ func Load(ctx context.Context, root, filename string) (inventory Inventory, resu
 	if err != nil || !filepath.IsLocal(relative) {
 		return Inventory{}, errors.New("pipeline must be inside the repository root")
 	}
+	if IsStatePath(relative) {
+		return Inventory{}, errors.New("agent state cannot be used as pipeline source")
+	}
 	directory, err := os.OpenRoot(root)
 	if err != nil {
 		return Inventory{}, err
 	}
 	defer func() { resultErr = errors.Join(resultErr, directory.Close()) }()
+	info, err := directory.Lstat(relative)
+	if err != nil || !info.Mode().IsRegular() {
+		return Inventory{}, errors.New("pipeline source must be a regular file")
+	}
 	file, err := directory.Open(relative)
 	if err != nil {
 		return Inventory{}, fmt.Errorf("read pipeline: %w", err)
@@ -89,7 +97,8 @@ func Load(ctx context.Context, root, filename string) (inventory Inventory, resu
 		return Inventory{}, fmt.Errorf("unsupported API version %q", doc.APIVersion)
 	}
 	spec := doc.Spec
-	workspaceNote := ""
+	var workspaceBindings []yaml.Node
+	var supplied []parameter
 	if doc.Kind == "PipelineRun" {
 		var run struct {
 			PipelineSpec yaml.Node `yaml:"pipelineSpec"`
@@ -98,6 +107,7 @@ func Load(ctx context.Context, root, filename string) (inventory Inventory, resu
 				Resolver string `yaml:"resolver"`
 			} `yaml:"pipelineRef"`
 			Workspaces []yaml.Node `yaml:"workspaces"`
+			Params     []parameter `yaml:"params"`
 		}
 		if err := spec.Decode(&run); err != nil {
 			return Inventory{}, err
@@ -106,21 +116,14 @@ func Load(ctx context.Context, root, filename string) (inventory Inventory, resu
 		if spec.Kind == 0 && run.PipelineRef.Resolver == "" {
 			spec = definitions["Pipeline/"+run.PipelineRef.Name]
 		}
-		for _, binding := range run.Workspaces {
-			var bound struct {
-				Name string `yaml:"name"`
-			}
-			if err := binding.Decode(&bound); err != nil {
-				return Inventory{}, err
-			}
-			if extra := unexpected(binding, "name", "emptyDir", "persistentVolumeClaim", "volumeClaimTemplate"); bound.Name == "source" && extra != "" {
-				workspaceNote = "resource workspace binding is not supported: " + extra
-			}
-		}
+		workspaceBindings, supplied = run.Workspaces, run.Params
 	}
 	sum := sha256.Sum256(data)
 	result := Inventory{Root: root, Pipeline: filepath.ToSlash(relative), Hash: hex.EncodeToString(sum[:])}
 	if spec.Kind == 0 {
+		if request.CheckoutTask != "" {
+			return Inventory{}, errors.New("checkout binding needs an available pipeline definition")
+		}
 		result.Steps = []Step{{ID: "pipeline/reference", Task: "pipeline", Unsupported: "pipeline reference is not available in this file"}}
 		return result, nil
 	}
@@ -128,9 +131,35 @@ func Load(ctx context.Context, root, filename string) (inventory Inventory, resu
 	if err := spec.Decode(&body); err != nil {
 		return Inventory{}, err
 	}
+	result.Parameters, err = parameterValues(body.Params, supplied, request.Parameters)
+	if err != nil {
+		return Inventory{}, err
+	}
+	request.Root = root
+	result.Checkout, err = bindCheckout(ctx, request, body, result.Parameters)
+	if err != nil {
+		return Inventory{}, err
+	}
+	context := executionContext{definitions: definitions, parameters: result.Parameters, checkout: result.Checkout}
+	workspace := "source"
+	if result.Checkout != nil {
+		workspace = result.Checkout.Workspace
+	}
+	workspaceNote := ""
+	for _, binding := range workspaceBindings {
+		var bound struct {
+			Name string `yaml:"name"`
+		}
+		if err := binding.Decode(&bound); err != nil {
+			return Inventory{}, err
+		}
+		if extra := unexpected(binding, "name", "emptyDir", "persistentVolumeClaim", "volumeClaimTemplate"); bound.Name == workspace && extra != "" {
+			workspaceNote = "resource workspace binding is not supported: " + extra
+		}
+	}
 	seen := make(map[string]bool)
 	for i, node := range append(body.Tasks, body.Finally...) {
-		steps, err := taskSteps(node, definitions, i >= len(body.Tasks))
+		steps, err := taskSteps(node, context, i >= len(body.Tasks))
 		if err != nil {
 			return Inventory{}, err
 		}

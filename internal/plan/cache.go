@@ -16,8 +16,9 @@ import (
 
 // Cache keeps acceptance separate from the executable plan digest.
 type Cache struct {
-	Plan     Plan   `json:"plan"`
-	Accepted string `json:"accepted_digest"`
+	Plan       Plan   `json:"plan"`
+	Accepted   string `json:"accepted_digest"`
+	SharedHash string `json:"shared_hash,omitempty"`
 }
 
 func cachePath(src source.Inventory) (string, error) {
@@ -38,52 +39,82 @@ func cachePath(src source.Inventory) (string, error) {
 
 // Read revalidates source execution before allowing cached acceptance.
 func Read(ctx context.Context, src source.Inventory, policy Policy) (Cache, bool, error) {
+	shared, sharedHash, err := readShared(ctx, src)
+	if err != nil {
+		return Cache{}, false, err
+	}
 	path, err := cachePath(src)
 	if err != nil {
 		return Cache{}, false, err
 	}
 	data, err := os.ReadFile(path)
-	if errors.Is(err, os.ErrNotExist) {
-		return Cache{}, false, nil
-	}
-	if err != nil {
+	if err != nil && !errors.Is(err, os.ErrNotExist) {
 		return Cache{}, false, err
 	}
 	var cached Cache
-	if err := json.Unmarshal(data, &cached); err != nil {
-		return Cache{}, false, fmt.Errorf("invalid cached plan: %w", err)
+	if len(data) > 0 {
+		if err := decodeState(data, &cached); err != nil {
+			return Cache{}, false, fmt.Errorf("invalid cached plan: %w", err)
+		}
 	}
-	p := cached.Plan
-	if p.Version != 1 {
-		return Cache{}, false, errors.New("unsupported cached plan version")
+	var sharedPlan Plan
+	sharedCurrent := false
+	if len(shared) > 0 {
+		if err := decodeState(shared, &sharedPlan); err != nil {
+			return Cache{}, false, fmt.Errorf("invalid shared plan; use --refresh to regenerate: %w", err)
+		}
+		if sharedPlan.Version != 2 {
+			return Cache{}, false, errors.New("unsupported shared plan version; use --refresh")
+		}
+		sharedCurrent, err = currentPlan(ctx, src, sharedPlan, policy)
+		if err != nil {
+			return Cache{}, false, err
+		}
 	}
-	if p.Pipeline != src.Pipeline || p.Policy != policy.local() || p.Inputs[src.Pipeline] != src.Hash {
-		return Cache{}, false, nil
+	if cached.SharedHash == sharedHash && cached.Plan.Version == 2 {
+		current, err := currentPlan(ctx, src, cached.Plan, policy)
+		if err != nil {
+			return Cache{}, false, err
+		}
+		if current {
+			return cached, true, nil
+		}
+	}
+	if sharedCurrent {
+		return Cache{Plan: sharedPlan, Accepted: cached.Accepted, SharedHash: sharedHash}, true, nil
+	}
+	return Cache{SharedHash: sharedHash}, false, nil
+}
+
+func currentPlan(ctx context.Context, src source.Inventory, p Plan, policy Policy) (bool, error) {
+	if p.Version != 2 || p.Pipeline != src.Pipeline || p.Policy != policy.local() || p.Inputs[src.Pipeline] != src.Hash ||
+		!reflect.DeepEqual(p.Parameters, src.Parameters) || !reflect.DeepEqual(p.Checkout, src.Checkout) {
+		return false, nil
 	}
 	current, err := InputsCurrent(ctx, src.Root, p.Inputs)
 	if err != nil || !current {
-		return Cache{}, false, err
+		return false, err
 	}
 	if len(p.Steps) != len(src.Steps) {
-		return Cache{}, false, errors.New("cached plan changed source coverage")
+		return false, errors.New("saved plan changed source coverage")
 	}
 	proposal := struct {
 		Steps []decision `json:"steps"`
 	}{}
 	for i, s := range p.Steps {
 		if !reflect.DeepEqual(s.Source, src.Steps[i]) {
-			return Cache{}, false, errors.New("cached execution differs from source")
+			return false, errors.New("saved execution differs from source; use --refresh to regenerate")
 		}
 		proposal.Steps = append(proposal.Steps, decision{ID: s.Source.ID, Decision: s.Decision, Reason: s.Reason})
 	}
 	selection, err := json.Marshal(proposal)
 	if err != nil {
-		return Cache{}, false, err
+		return false, err
 	}
 	if _, err := Build(ctx, Request{Inventory: src, Selection: selection, Inputs: p.Inputs, Policy: policy}); err != nil {
-		return Cache{}, false, err
+		return false, err
 	}
-	return cached, true, nil
+	return true, nil
 }
 
 // Save atomically records a complete plan without modifying the source tree.

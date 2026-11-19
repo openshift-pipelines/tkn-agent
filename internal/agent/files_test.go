@@ -113,3 +113,34 @@ func TestReadFileRejectsChangedPlanningInput(t *testing.T) {
 		t.Fatal("changed input accepted within one planning session")
 	}
 }
+
+func TestReadFilePreservesSafeLinkAndOptionalAbsenceInputs(t *testing.T) {
+	root := t.TempDir()
+	writeFixture(t, root, "checks.conf", "enabled=true\n")
+	if err := os.Symlink("checks.conf", filepath.Join(root, "check-link")); err != nil {
+		t.Fatal(err)
+	}
+	files, err := openRepository(root)
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() {
+		if err := files.root.Close(); err != nil {
+			t.Error(err)
+		}
+	})
+	got, err := files.read(t.Context(), readArgs{Path: "check-link"})
+	if err != nil || !got.Exists || got.Content != "enabled=true\n" {
+		t.Fatalf("safe input link not readable: %+v %v", got, err)
+	}
+	missing, err := files.read(t.Context(), readArgs{Path: "optional.conf"})
+	if err != nil || missing.Exists {
+		t.Fatalf("optional absence not represented: %+v %v", missing, err)
+	}
+	sum := sha256.Sum256([]byte("enabled=true\n"))
+	hashes := files.hashes()
+	if len(hashes) != 3 || hashes["check-link"] != "link:checks.conf" ||
+		hashes["checks.conf"] != hex.EncodeToString(sum[:]) || hashes["optional.conf"] != "absent" {
+		t.Fatalf("planning input provenance incomplete: %+v", hashes)
+	}
+}

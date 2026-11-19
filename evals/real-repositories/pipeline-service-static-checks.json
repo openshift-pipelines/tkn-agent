@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "id": "real-pipeline-service-static-checks",
+  "scenarios": [
+    "LOCAL-001",
+    "LOCAL-002",
+    "LOCAL-003",
+    "LOCAL-005"
+  ],
+  "source": {
+    "repository": "https://github.com/openshift-pipelines/pipeline-service",
+    "commit": "5b34974a82703dfba477bbec73b0658d49ddc69b",
+    "pipeline": ".tekton/test-pipeline-service-static-code-analysis.yaml",
+    "license": "Apache-2.0",
+    "license_path": "LICENSE"
+  },
+  "scope": {
+    "component_checks": [
+      "shellcheck/run-shellcheck",
+      "yamllint/run-yamllint"
+    ],
+    "other_source_entries": [
+      "fetch-repository/reference",
+      "hadolint/run-hadolint",
+      "checkov/run-checkov",
+      "grafana-dashboards/run-grafana-dashboards"
+    ],
+    "family_count": 1
+  },
+  "image": {
+    "original": "quay.io/redhat-pipeline-service/static-checks:$(params.target_branch)",
+    "binding": {
+      "target_branch": "main"
+    },
+    "resolved": "quay.io/redhat-pipeline-service/static-checks@sha256:0d44abed716eec3e9566c4f9b6789e011f5985154869eff0e70e0e616789e113",
+    "platform": "linux/amd64"
+  },
+  "checks": [
+    {
+      "id": "shellcheck/run-shellcheck",
+      "script_path": "ci/images/static-checks/content/bin/shellcheck.sh",
+      "command": "ci/images/static-checks/content/bin/shellcheck.sh --workspace_dir .",
+      "mutation": {
+        "path": "tkn_agent_eval_unquoted.sh",
+        "content": "#!/usr/bin/env bash\nprintf '%s\\n' $1\n",
+        "expected_diagnostic": "SC2086",
+        "expected_exit": "nonzero",
+        "repair": "#!/usr/bin/env bash\nprintf '%s\\n' \"$1\"\n"
+      }
+    },
+    {
+      "id": "yamllint/run-yamllint",
+      "script_path": "ci/images/static-checks/content/bin/yamllint.sh",
+      "configuration": "ci/images/static-checks/content/config/yamllint.yaml",
+      "command": "ci/images/static-checks/content/bin/yamllint.sh --config-file ./ci/images/static-checks/content/config/yamllint.yaml --workspace_dir .",
+      "mutation": {
+        "path": "tkn-agent-eval-duplicate.yaml",
+        "content": "---\nevaluation:\n  enabled: true\n  enabled: false\n",
+        "expected_diagnostic": "key-duplicates",
+        "expected_exit": "nonzero",
+        "repair": "---\nevaluation:\n  enabled: true\n"
+      }
+    }
+  ],
+  "component_replay_adaptations": [
+    "Bind the pinned private local checkout as the source workspace instead of running cluster git-clone.",
+    "Use the repository default target branch main for the original image parameter; pin the resulting image manifest.",
+    "Run each original helper in the checkout root using the original image bash interpreter; no validator or flags are replaced.",
+    "The native-container replay is separate from tkn-agent orchestration and does not establish support for the original PipelineRun."
+  ],
+  "oracles": {
+    "clean": "Both original helper commands exit zero.",
+    "mutated": "Each matching original helper exits nonzero and reports the seeded file and required diagnostic.",
+    "repaired": "Both repaired inputs pass without changing the helpers, flags or image."
+  },
+  "current_cli": {
+    "expected_outcome": "no-local-checks",
+    "expected_exit": 2,
+    "expected_executed": 0,
+    "not_native_execution_coverage": true
+  },
+  "live_model_evaluation": {
+    "performed": false,
+    "reason": "No supported provider credential or explicit model configured."
+  },
+  "runtime_evidence": "artifacts/real-repository-eval/"
+}

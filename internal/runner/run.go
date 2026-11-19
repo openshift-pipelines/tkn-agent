@@ -56,16 +56,23 @@ func Run(ctx context.Context, root string, p plan.Plan) (result Result, resultEr
 	if err := os.Mkdir(workspace, 0o755); err != nil {
 		return result, err
 	}
-	snap, err := copySource(ctx, root, workspace)
+	checkout := workspace
+	if p.Checkout != nil && p.Checkout.Subdirectory != "" {
+		checkout = filepath.Join(workspace, p.Checkout.Subdirectory)
+		if err := os.MkdirAll(checkout, 0o755); err != nil {
+			return result, err
+		}
+	}
+	snap, err := copySource(ctx, root, checkout)
 	if err != nil {
 		return result, err
 	}
-	current, err := plan.InputsCurrent(ctx, workspace, p.Inputs)
+	current, err := plan.InputsCurrent(ctx, checkout, p.Inputs)
 	if err != nil || !current {
 		return result, errors.Join(err, errors.New("planning inputs are missing or changed in the source snapshot"))
 	}
 	result.Snapshot = snap.Digest
-	executor := execution{workspace: snap.Directory, policy: p.Policy}
+	executor := execution{workspace: workspace, policy: p.Policy}
 	stopped := make(map[string]bool)
 	for _, step := range p.Steps {
 		if step.Decision != "run" {
@@ -88,6 +95,11 @@ func Run(ctx context.Context, root string, p plan.Plan) (result Result, resultEr
 }
 
 func (e execution) check(ctx context.Context, step plan.Step) (Receipt, error) {
+	workingDir := filepath.Join(e.workspace, strings.TrimPrefix(strings.TrimPrefix(step.Source.WorkingDir, "/workspace"), "/"))
+	info, err := os.Stat(workingDir)
+	if err != nil || !info.IsDir() {
+		return Receipt{ID: step.Source.ID, Outcome: "blocked", ExitCode: -1}, errors.New("source working directory is unavailable")
+	}
 	id := make([]byte, 12)
 	if _, err := rand.Read(id); err != nil {
 		return Receipt{}, err
@@ -112,7 +124,7 @@ func (e execution) check(ctx context.Context, step plan.Step) (Receipt, error) {
 	cmd.Stdin = strings.NewReader(step.Source.Script)
 	var output bytes.Buffer
 	cmd.Stdout, cmd.Stderr = &output, &output
-	err := cmd.Run()
+	err = cmd.Run()
 	receipt.Output = output.String()
 	if err == nil {
 		receipt.ExitCode, receipt.Outcome = 0, "passed"

@@ -11,21 +11,29 @@ import (
 	"time"
 
 	"github.com/openshift-pipelines/tkn-agent/internal/plan"
+	"github.com/openshift-pipelines/tkn-agent/internal/source"
 )
 
 // Pin records immutable local image identities before plan acceptance.
 func Pin(ctx context.Context, p plan.Plan) (plan.Plan, error) {
 	p.Steps = slices.Clone(p.Steps)
+	resolved := make(map[string]image)
 	for i, step := range p.Steps {
 		if step.Decision != "run" {
 			continue
 		}
-		image, err := inspectImage(ctx, step.Source.Image)
-		if err != nil {
-			return plan.Plan{}, err
+		key := step.Source.Image + "\x00" + step.Source.PullPolicy
+		pinned, exists := resolved[key]
+		if !exists {
+			var err error
+			pinned, err = inspectImage(ctx, step.Source)
+			if err != nil {
+				return plan.Plan{}, err
+			}
+			resolved[key] = pinned
 		}
-		p.Steps[i].ImageID = image.ID
-		p.Steps[i].Platform = image.OS + "/" + image.Architecture
+		p.Steps[i].ImageID = pinned.ID
+		p.Steps[i].Platform = pinned.OS + "/" + pinned.Architecture
 	}
 	return p, nil
 }
@@ -36,14 +44,22 @@ type image struct {
 	Architecture string `json:"Architecture"`
 }
 
-func inspectImage(ctx context.Context, ref string) (image, error) {
+func inspectImage(ctx context.Context, step source.Step) (image, error) {
+	ref := step.Image
 	ctx, cancel := context.WithTimeout(ctx, 3*time.Minute)
 	defer cancel()
+	exists := true
 	if err := exec.CommandContext(ctx, "podman", "image", "exists", ref).Run(); err != nil {
 		var exit *exec.ExitError
 		if !errors.As(err, &exit) || exit.ExitCode() != 1 {
 			return image{}, fmt.Errorf("podman unavailable: %w", err)
 		}
+		exists = false
+	}
+	if !exists && step.PullPolicy == "Never" {
+		return image{}, errors.New("source image is not cached and its pull policy is Never")
+	}
+	if step.PullPolicy == "Always" || !exists {
 		if output, err := exec.CommandContext(ctx, "podman", "pull", ref).CombinedOutput(); err != nil {
 			return image{}, fmt.Errorf("pull %s: %w: %s", ref, err, output)
 		}

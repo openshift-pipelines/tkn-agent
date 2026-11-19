@@ -23,7 +23,7 @@ func inventory(t *testing.T) source.Inventory {
 	if err := os.WriteFile(path, data, 0o600); err != nil {
 		t.Fatal(err)
 	}
-	got, err := source.Load(t.Context(), root, path)
+	got, err := source.Load(t.Context(), source.Request{Root: root, Pipeline: path})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -121,12 +121,26 @@ func TestCachedAcceptanceCannotSurviveDefinitionChange(t *testing.T) {
 	if err := os.WriteFile(path, append(data, []byte("\n# changed definition\n")...), 0o600); err != nil {
 		t.Fatal(err)
 	}
-	changed, err := source.Load(t.Context(), src.Root, path)
+	changed, err := source.Load(t.Context(), source.Request{Root: src.Root, Pipeline: path})
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	if _, current, err := Read(t.Context(), changed, policy); err != nil || current {
 		t.Fatalf("stale definition retained acceptance: current=%v err=%v", current, err)
+	}
+}
+
+func TestSelectionCannotOmitEarlierStepsInSelectedTask(t *testing.T) {
+	src := inventory(t)
+	check := src.Steps[0]
+	setup := check
+	setup.ID, setup.Script = "lint/setup", "mkdir required-state\n"
+	check.Script = "test -d required-state\n"
+	src.Steps = []source.Step{setup, check}
+	proposal := `{"steps":[{"id":"lint/setup","decision":"skip","reason":"omitted"},{"id":"lint/check","decision":"run","reason":"selected"}]}`
+
+	if _, err := Build(t.Context(), Request{Inventory: src, Selection: json.RawMessage(proposal), Policy: Policy{TimeoutSeconds: 180}}); err == nil {
+		t.Fatal("selected check omitted its earlier task setup")
 	}
 }

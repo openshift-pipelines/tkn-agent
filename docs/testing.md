@@ -3,6 +3,23 @@
 Status: the first Go workflow has executable unit and real-Podman acceptance tests.
 Broader compatibility and live-model evaluations remain planned.
 
+The bounded real case is now driven by `make real-e2e`. It clones the pinned
+public pipeline-service source into a private directory and runs its original
+image and validators through the actual CLI. Set `TKN_AGENT_REAL_SOURCE` to an
+existing checkout to use it as a clone source. The suite verifies review gating,
+shared persistence, safe source-link handling, both seeded defects, repaired
+controls, provider-free replay and inspected-helper invalidation.
+
+Plan boundary tests cover shared analysis without inherited local approval,
+tampered execution, self-input refusal, optional file appearance and intervening
+writer conflicts. A fresh local CLI context also reuses shared analysis without
+provider access while requiring approval. Image-store protocol units distinguish
+Always, IfNotPresent and Never without claiming mock container execution.
+
+Regression proof deliberately disabled the foreign-repository, source-fidelity
+and absent-input guards. The corresponding tests failed for the intended
+reasons; the guards were restored.
+
 ## Runnable checks
 
 `make build` builds the actual CLI. `make fmt-check lint test e2e` runs formatting,

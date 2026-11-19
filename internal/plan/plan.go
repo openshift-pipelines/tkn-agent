@@ -12,6 +12,7 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/openshift-pipelines/tkn-agent/internal/source"
 )
@@ -40,11 +41,13 @@ type Step struct {
 
 // Plan contains all source steps, including explicitly omitted checks.
 type Plan struct {
-	Version  int               `json:"version"`
-	Pipeline string            `json:"pipeline"`
-	Inputs   map[string]string `json:"inputs"`
-	Steps    []Step            `json:"steps"`
-	Policy   Policy            `json:"policy"`
+	Version    int               `json:"version"`
+	Pipeline   string            `json:"pipeline"`
+	Inputs     map[string]string `json:"inputs"`
+	Steps      []Step            `json:"steps"`
+	Policy     Policy            `json:"policy"`
+	Parameters map[string]string `json:"parameters,omitempty"`
+	Checkout   *source.Checkout  `json:"checkout,omitempty"`
 }
 
 // Request supplies the proposal and independently observed planning inputs.
@@ -87,28 +90,39 @@ func Build(ctx context.Context, request Request) (Plan, error) {
 			return Plan{}, errors.New("selection has a duplicate ID or missing reason")
 		}
 		switch d.Decision {
-		case "run", "skip", "unresolved":
+		case "run", "skip", "unresolved", "provided":
 		default:
 			return Plan{}, fmt.Errorf("%s: invalid decision", d.ID)
 		}
 		chosen[d.ID] = d
 	}
-	result := Plan{Version: 1, Pipeline: src.Pipeline, Policy: request.Policy.local(), Inputs: map[string]string{src.Pipeline: src.Hash}}
+	result := Plan{Version: 2, Pipeline: src.Pipeline, Policy: request.Policy.local(), Inputs: map[string]string{src.Pipeline: src.Hash},
+		Parameters: src.Parameters, Checkout: src.Checkout}
 	for path, hash := range request.Inputs {
 		if path == src.Pipeline && hash != src.Hash {
 			return Plan{}, errors.New("pipeline changed during planning")
 		}
 		result.Inputs[path] = hash
 	}
+	omitted := make(map[string]bool)
 	for _, s := range src.Steps {
 		d, exists := chosen[s.ID]
 		if !exists {
 			return Plan{}, fmt.Errorf("selection does not account for %s", s.ID)
 		}
+		if (d.Decision == "provided") != s.Provided || (s.Provided && s.Unsupported != "") {
+			return Plan{}, fmt.Errorf("%s: provided checkout does not match source binding", s.ID)
+		}
+		if d.Decision == "run" && omitted[s.Task] {
+			return Plan{}, fmt.Errorf("%s: earlier task steps cannot be omitted", s.ID)
+		}
 		if d.Decision == "run" && (s.Heavy || s.Unsupported != "") {
 			return Plan{}, fmt.Errorf("%s cannot run locally: heavy/outer-loop work or %s", s.ID, s.Unsupported)
 		}
 		result.Steps = append(result.Steps, Step{Source: s, Decision: d.Decision, Reason: d.Reason})
+		if d.Decision != "run" && d.Decision != "provided" {
+			omitted[s.Task] = true
+		}
 	}
 	current, err := InputsCurrent(ctx, src.Root, result.Inputs)
 	if err != nil {
@@ -141,18 +155,40 @@ func InputsCurrent(ctx context.Context, root string, inputs map[string]string) (
 		if err := ctx.Err(); err != nil {
 			return false, err
 		}
-		if !filepath.IsLocal(name) {
+		if !filepath.IsLocal(name) || source.IsStatePath(name) {
 			return false, errors.New("planning input escapes the repository")
 		}
 		info, err := directory.Lstat(name)
 		if errors.Is(err, os.ErrNotExist) {
+			if expected == "absent" {
+				continue
+			}
 			return false, nil
 		}
 		if err != nil {
 			return false, err
 		}
+		if strings.HasPrefix(expected, "link:") {
+			if info.Mode()&os.ModeSymlink == 0 {
+				return false, nil
+			}
+			target, err := directory.Readlink(name)
+			if err != nil {
+				return false, err
+			}
+			if filepath.IsAbs(target) || !filepath.IsLocal(filepath.Join(filepath.Dir(name), target)) || source.IsStatePath(target) {
+				return false, errors.New("planning symlink escapes its allowed input")
+			}
+			if "link:"+target != expected {
+				return false, nil
+			}
+			continue
+		}
+		if expected == "absent" {
+			return false, nil
+		}
 		if !info.Mode().IsRegular() {
-			return false, errors.New("planning inputs must be regular files")
+			return false, nil
 		}
 		file, err := directory.Open(name)
 		if err != nil {

@@ -22,6 +22,8 @@ type options struct {
 	root, pipeline, provider, model, approve, format string
 	timeout                                          time.Duration
 	local, refresh                                   bool
+	checkout                                         string
+	parameters                                       []string
 }
 
 // Run implements the process exit contract shared by direct and hook invocation.
@@ -42,8 +44,8 @@ func Run(ctx context.Context, args []string, streams IO) int {
 			if opts.format == "json" {
 				return json.NewEncoder(streams.Out).Encode(result)
 			}
-			if _, err := fmt.Fprintf(streams.Out, "%s: %s\n%d selected, %d skipped, %d unresolved; cluster CI remains required\n",
-				result.State, result.Message, result.Selected, result.Skipped, result.Unresolved); err != nil {
+			if _, err := fmt.Fprintf(streams.Out, "%s: %s\n%d selected, %d provided, %d skipped, %d unresolved; cluster CI remains required\n",
+				result.State, result.Message, result.Selected, result.Provided, result.Skipped, result.Unresolved); err != nil {
 				return err
 			}
 			for _, check := range result.Checks {
@@ -69,6 +71,8 @@ func Run(ctx context.Context, args []string, streams IO) int {
 	flags.StringVar(&opts.format, "format", "text", "Result format: text or json")
 	flags.DurationVar(&opts.timeout, "timeout", 3*time.Minute, "Deadline per selected check, including startup")
 	flags.BoolVar(&opts.refresh, "refresh", false, "Analyze again instead of reusing the plan")
+	flags.StringVar(&opts.checkout, "bind-checkout", "", "Explicitly provide TASK's reviewed self-checkout from the current worktree")
+	flags.StringArrayVar(&opts.parameters, "param", nil, "Bind a declared string parameter NAME=VALUE (repeatable)")
 	root.AddCommand(verify)
 	root.SetArgs(args)
 	root.SetOut(streams.Out)

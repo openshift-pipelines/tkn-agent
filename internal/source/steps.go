@@ -16,13 +16,16 @@ var gitCommand = regexp.MustCompile(`\bgit\s+`)
 var substitution = regexp.MustCompile(`\$\((?:params|tasks|workspaces|context|results|steps)\.[^)]*\)|\{\{`)
 var credentialName = regexp.MustCompile(`(?i)password|passwd|token|secret|api[_-]?key|authorization`)
 
-func taskSteps(node yaml.Node, definitions map[string]yaml.Node, final bool) ([]Step, error) {
+func taskSteps(node yaml.Node, context executionContext, final bool) ([]Step, error) {
 	var task task
 	if err := node.Decode(&task); err != nil {
 		return nil, err
 	}
 	if task.Name == "" {
 		return nil, errors.New("every pipeline task needs a name")
+	}
+	if context.checkout != nil && task.Name == context.checkout.Task {
+		return []Step{{ID: task.Name + "/reference", Task: task.Name, Provided: true}}, nil
 	}
 	spec := task.Spec
 	if spec.Kind == 0 && task.Ref.Kind != 0 {
@@ -34,7 +37,7 @@ func taskSteps(node yaml.Node, definitions map[string]yaml.Node, final bool) ([]
 			return nil, err
 		}
 		if ref.Resolver == "" {
-			spec = definitions["Task/"+ref.Name]
+			spec = context.definitions["Task/"+ref.Name]
 		}
 	}
 	if spec.Kind == 0 {
@@ -51,16 +54,32 @@ func taskSteps(node yaml.Node, definitions map[string]yaml.Node, final bool) ([]
 	switch {
 	case final:
 		note = "finally tasks remain in outer-loop CI"
-	case len(task.RunAfter) > 0 || task.When.Kind != 0 || task.Retries != 0 || task.OnError != "" || task.Timeout != "":
+	case task.When.Kind != 0 || task.Retries != 0 || task.OnError != "" || task.Timeout != "":
 		note = "task dependencies, conditions, retries or lifecycle overrides require a later capability"
 	case body.Sidecars.Kind != 0:
 		note = "required sidecar service is not supported"
 	case body.Template.Kind != 0 || body.Volumes.Kind != 0:
 		note = "step templates and additional volumes are not supported"
 	}
+	for _, dependency := range task.RunAfter {
+		if context.checkout == nil || dependency != context.checkout.Task {
+			note = "task dependency is not provided by the explicit checkout binding"
+		}
+	}
+	parameters, err := scopedParameters(body, task.Params, context.parameters)
+	if err != nil {
+		return nil, err
+	}
 	bindings := make(map[string]string)
+	for name, value := range parameters {
+		bindings["$(params."+name+")"] = value
+	}
+	sourceWorkspace := "source"
+	if context.checkout != nil {
+		sourceWorkspace = context.checkout.Workspace
+	}
 	for _, workspace := range task.Workspaces {
-		if workspace.Workspace != "source" || workspace.SubPath != "" {
+		if workspace.Workspace != sourceWorkspace || workspace.SubPath != "" {
 			note = "only an explicit source workspace without subPath is supported"
 		}
 		bindings["$(workspaces."+workspace.Name+".path)"] = "/workspace"
@@ -83,7 +102,7 @@ func taskSteps(node yaml.Node, definitions map[string]yaml.Node, final bool) ([]
 		if note != "" {
 			s.Unsupported = note
 		}
-		if extra := unexpected(raw, "name", "description", "displayName", "image", "script", "command", "args", "workingDir", "env", "onError", "ref"); extra != "" {
+		if extra := unexpected(raw, "name", "description", "displayName", "image", "imagePullPolicy", "script", "command", "args", "workingDir", "env", "onError", "ref"); extra != "" {
 			s.Unsupported = extra
 		}
 		result = append(result, s)
@@ -103,13 +122,23 @@ func makeStep(original step, taskName string, bindings map[string]string) Step {
 		}
 		return value
 	}
-	s.Script, s.WorkingDir = replace(s.Script), replace(s.WorkingDir)
+	s.Script, s.WorkingDir, s.Image = replace(s.Script), replace(s.WorkingDir), replace(s.Image)
+	s.PullPolicy = original.PullPolicy
+	if s.PullPolicy == "" {
+		s.PullPolicy = "IfNotPresent"
+		tag := strings.LastIndex(s.Image, ":")
+		if !strings.Contains(s.Image, "@") && (tag <= strings.LastIndex(s.Image, "/") || strings.HasSuffix(s.Image, ":latest")) {
+			s.PullPolicy = "Always"
+		}
+	}
 	if s.WorkingDir == "" {
 		s.WorkingDir = "/workspace"
 	}
 	text := original.Script + "\n" + strings.Join(append(original.Command, original.Args...), " ")
 	s.Heavy = heavyCommand.MatchString(text) || heavyImage.MatchString(original.Image) || strings.Contains(strings.ToLower(original.Description+" "+original.DisplayName), "(skip-local)")
 	switch {
+	case s.PullPolicy != "Always" && s.PullPolicy != "IfNotPresent" && s.PullPolicy != "Never":
+		s.Unsupported = "image pull policy is not supported"
 	case s.Image == "" || strings.HasPrefix(s.Image, "-") || strings.ContainsAny(s.Image, " \t\n"):
 		s.Unsupported = "image is missing, invalid or unresolved"
 	case original.Ref.Kind != 0 || s.Script == "" || len(original.Command) > 0 || len(original.Args) > 0:

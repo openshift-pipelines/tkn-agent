@@ -1,0 +1,2021 @@
+{
+  "schema_version": 1,
+  "assessed_at": "2026-11-18T21:50:18.040Z",
+  "organization": "openshift-pipelines",
+  "scope": "Public repositories; default-branch roots only; forks and archived repositories retained.",
+  "method": "Paginated GitHub GraphQL repository/default-head/directory-object inspection; REST Git Trees listings pinned by object ID.",
+  "counts": {
+    "publicRepositories": 101,
+    "withEither": 24,
+    "withTekton": 19,
+    "withKonflux": 16,
+    "withBoth": 11,
+    "placeholderOnly": [
+      "openshift-pipelines/p12n-console-plugin",
+      "openshift-pipelines/p12n-console-plugin-pf5",
+      "openshift-pipelines/p12n-manual-approval-gate",
+      "openshift-pipelines/pac-downstream",
+      "openshift-pipelines/tektoncd-chains",
+      "openshift-pipelines/tektoncd-hub",
+      "openshift-pipelines/tektoncd-triggers"
+    ]
+  },
+  "repositories": [
+    {
+      "repository": "openshift-pipelines/acm-pipelines-addon",
+      "url": "https://github.com/openshift-pipelines/acm-pipelines-addon",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "73ad18c8ccb1e3b707a924063a3e4d99387e4145",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/agenttask",
+      "url": "https://github.com/openshift-pipelines/agenttask",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "2254e31489f6bd414b34b3d024484c7b9eefb76d",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/agenttask-adapter-fullsend",
+      "url": "https://github.com/openshift-pipelines/agenttask-adapter-fullsend",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "2093530c86f8897333378c5ba3a916c4bc21aeae",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/agenttask-adapter-lightspeed",
+      "url": "https://github.com/openshift-pipelines/agenttask-adapter-lightspeed",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "2003607cf56f7d761500671220b039f224bed2c7",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/agenttask-examples",
+      "url": "https://github.com/openshift-pipelines/agenttask-examples",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "4cfe00979f6cccc47a5c8b3a0d2844c71901824e",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/ai-approver",
+      "url": "https://github.com/openshift-pipelines/ai-approver",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "546668c6542deeeb156a56cb6a3dc50835099469",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/ambient-workflows",
+      "url": "https://github.com/openshift-pipelines/ambient-workflows",
+      "archived": true,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "98ca63c50f72aa88b15ea960a0cd2b15d364091d",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/architecture",
+      "url": "https://github.com/openshift-pipelines/architecture",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "bf430b915a779a2daf550af0646a98c2d6ceadbb",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/catalog-cd",
+      "url": "https://github.com/openshift-pipelines/catalog-cd",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "40765cc54de4e07e9e83c88e9a63824a11f58793",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/cfp-radar",
+      "url": "https://github.com/openshift-pipelines/cfp-radar",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "e1c598f575928d1dc80cba0da2e4a506c10872e8",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/console-plugin",
+      "url": "https://github.com/openshift-pipelines/console-plugin",
+      "archived": false,
+      "fork": false,
+      "default_branch": "master",
+      "commit": "c97eb2ba13a58c487a18cab0a0fdc2ebed472ece",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/coverage-dashboard",
+      "url": "https://github.com/openshift-pipelines/coverage-dashboard",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "157431740562a33e9e923f2bb2565711877c62bf",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/cumin",
+      "url": "https://github.com/openshift-pipelines/cumin",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "48e0c297dc9fb9a4f10b0d014aace25171a562bf",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/cve-automation",
+      "url": "https://github.com/openshift-pipelines/cve-automation",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "961682327df177e0a2eb21c7bbbf96b7930b0a24",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/docs",
+      "url": "https://github.com/openshift-pipelines/docs",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "e73ec6a10b7ad988d30df7c318939d2b1adc5c18",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/ecosystem-images",
+      "url": "https://github.com/openshift-pipelines/ecosystem-images",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "6bef2e3d5357727a7aca07ac6216d5e14eb566d6",
+      "tekton_tree": "54c8d385c2faf8bb54b50e5874dcca216a02310f",
+      "konflux_tree": "03d3e8c21018e5b30433304201c53679d8ee4e53"
+    },
+    {
+      "repository": "openshift-pipelines/enhancements",
+      "url": "https://github.com/openshift-pipelines/enhancements",
+      "archived": true,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "f52b70b1f66e65d1cc45969f8d02d68f2ee220b6",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/hack",
+      "url": "https://github.com/openshift-pipelines/hack",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "8143c348c1c9eaa61ea4c81b6b1f9b8288fdb9d5",
+      "tekton_tree": null,
+      "konflux_tree": "c3d5d3d5e108e67d0adcc4387d1da9f524a60d7f"
+    },
+    {
+      "repository": "openshift-pipelines/homebrew-pipelines-as-code",
+      "url": "https://github.com/openshift-pipelines/homebrew-pipelines-as-code",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "169418d8231a31f6c8afdda5a08f803d780a62e3",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/hub",
+      "url": "https://github.com/openshift-pipelines/hub",
+      "archived": false,
+      "fork": true,
+      "default_branch": "main",
+      "commit": "c93cb964116764fb4be58145a56138cce0716f0b",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/jenkins-to-tekton",
+      "url": "https://github.com/openshift-pipelines/jenkins-to-tekton",
+      "archived": false,
+      "fork": false,
+      "default_branch": null,
+      "commit": null,
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/kueue",
+      "url": "https://github.com/openshift-pipelines/kueue",
+      "archived": false,
+      "fork": true,
+      "default_branch": "main",
+      "commit": "c4d2524ab722604362e83411338975713d233972",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/lightspeed-rag-content",
+      "url": "https://github.com/openshift-pipelines/lightspeed-rag-content",
+      "archived": false,
+      "fork": true,
+      "default_branch": "main",
+      "commit": "bb8ba23b68caf7a2e2656048dce5450d5b13a3ee",
+      "tekton_tree": "bbf201b23f2a9a545d9c1657fe4b9154af045aca",
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/manual-approval-gate",
+      "url": "https://github.com/openshift-pipelines/manual-approval-gate",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "0ca252ea296790b3ff0c778727fd58e8a44e1ef8",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/mcp-tekton",
+      "url": "https://github.com/openshift-pipelines/mcp-tekton",
+      "archived": true,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "71570c7acba7f8c04b4fddbac299e0cb188b9ea6",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/multi-cluster",
+      "url": "https://github.com/openshift-pipelines/multi-cluster",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "4302b99f7e519405e40acaf333533344b39be141",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/multicluster-proxy-aae",
+      "url": "https://github.com/openshift-pipelines/multicluster-proxy-aae",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "f5e42657320d7733e8c4c7a94f4ba19f5b528e1f",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/must-gather",
+      "url": "https://github.com/openshift-pipelines/must-gather",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "0c193d206f309359a04ef70e48a9315e0492f648",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/nightly-ci-kicks",
+      "url": "https://github.com/openshift-pipelines/nightly-ci-kicks",
+      "archived": false,
+      "fork": false,
+      "default_branch": "master",
+      "commit": "aba9b28359116f8513cbcb47522b8b5154b35dcb",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/one-click-release",
+      "url": "https://github.com/openshift-pipelines/one-click-release",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "7c202d88a5d5d766fcb0a72bd2677de315488bc1",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/opc",
+      "url": "https://github.com/openshift-pipelines/opc",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "64e274a45ffd854e8a652f590a3093f6a84f0fc8",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/operator",
+      "url": "https://github.com/openshift-pipelines/operator",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "9a8f5f78d9c462ed47d2fe05957be05f879643b0",
+      "tekton_tree": "4b7d9a8ad1f91e2bc131cae732a299340a4889a0",
+      "konflux_tree": "d60e12d78b44db9c0d70f2c0d2144c8d0cb91018"
+    },
+    {
+      "repository": "openshift-pipelines/operator-downgrade",
+      "url": "https://github.com/openshift-pipelines/operator-downgrade",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "58bc5d983feb98c69b6c65bd8ddd68ee9d1a4b56",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/operator-tooling",
+      "url": "https://github.com/openshift-pipelines/operator-tooling",
+      "archived": true,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "0daddf693860c801db80a73b95b8a7e9256ee35d",
+      "tekton_tree": "27e3b354987c5ed732d0e4193db01ab9dbcec05f",
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/osp-component-dashboard",
+      "url": "https://github.com/openshift-pipelines/osp-component-dashboard",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "5d49bdb825da8b2d0e93e616eb500c87163b9fdf",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/osp-release",
+      "url": "https://github.com/openshift-pipelines/osp-release",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "2a6f3396bbc9b5651acc22918b5f6b3eeb7de0af",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/p12n-console-plugin",
+      "url": "https://github.com/openshift-pipelines/p12n-console-plugin",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "929d7d2ad4d5dff20c24f5043f75bff8dfae74a2",
+      "tekton_tree": "4a19f9e56fbf0a0a2e7bcef39daadc0adfd71f9b",
+      "konflux_tree": "ff50ab66ecdf1da53d0b2189ae87c33c58bb26b1"
+    },
+    {
+      "repository": "openshift-pipelines/p12n-console-plugin-pf5",
+      "url": "https://github.com/openshift-pipelines/p12n-console-plugin-pf5",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "7977c84f03e6bc297cf57a328223430568d4f046",
+      "tekton_tree": "4a19f9e56fbf0a0a2e7bcef39daadc0adfd71f9b",
+      "konflux_tree": "ff50ab66ecdf1da53d0b2189ae87c33c58bb26b1"
+    },
+    {
+      "repository": "openshift-pipelines/p12n-manual-approval-gate",
+      "url": "https://github.com/openshift-pipelines/p12n-manual-approval-gate",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "a606c8e36a959115a5ab5f2ca9cd49f36472900a",
+      "tekton_tree": "4a19f9e56fbf0a0a2e7bcef39daadc0adfd71f9b",
+      "konflux_tree": "452d07e004a2fa3ea6492b3581dfb191dedd6042"
+    },
+    {
+      "repository": "openshift-pipelines/p12n-multicluster-proxy-aae",
+      "url": "https://github.com/openshift-pipelines/p12n-multicluster-proxy-aae",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "2d577c1bbd035e78cada5512cbca4ac7c090bc81",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/p12n-opc",
+      "url": "https://github.com/openshift-pipelines/p12n-opc",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "8180d478152be3ce2c966ab6460a988aa49517ad",
+      "tekton_tree": null,
+      "konflux_tree": "e9c0b2697b65eb37ddc2421beadf2944c97d4929"
+    },
+    {
+      "repository": "openshift-pipelines/p12n-pipelines-multikueue-plugin",
+      "url": "https://github.com/openshift-pipelines/p12n-pipelines-multikueue-plugin",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "cca30949cf9c5234397cd87eb60493d0932ce650",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/p12n-syncer-service",
+      "url": "https://github.com/openshift-pipelines/p12n-syncer-service",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "7a26c7192723231c17bdeb1ad2560a9725aa25ee",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/p12n-tekton-assist",
+      "url": "https://github.com/openshift-pipelines/p12n-tekton-assist",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "2833c1b75a4c441e62879b88b68f5ae378821833",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/p12n-tekton-caches",
+      "url": "https://github.com/openshift-pipelines/p12n-tekton-caches",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "8e96150e6901c071956d95e9ec28e2e23270ba60",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/pac-downstream",
+      "url": "https://github.com/openshift-pipelines/pac-downstream",
+      "archived": false,
+      "fork": true,
+      "default_branch": "main",
+      "commit": "2fbd85dd6ee77256d83b72d893d5a57dd1d455b3",
+      "tekton_tree": "4a19f9e56fbf0a0a2e7bcef39daadc0adfd71f9b",
+      "konflux_tree": "4a3f4cb089bd4f259b0c6371509ba3857f32ff7e"
+    },
+    {
+      "repository": "openshift-pipelines/performance",
+      "url": "https://github.com/openshift-pipelines/performance",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "0005af189ba39b6e69c1d38a60b3dcb05bb5fd81",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/pipeline-service",
+      "url": "https://github.com/openshift-pipelines/pipeline-service",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "5b34974a82703dfba477bbec73b0658d49ddc69b",
+      "tekton_tree": "c32e9c95e14d5a1cb5f166ddc9dc2a04ebab8a32",
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/pipeline-service-exporter",
+      "url": "https://github.com/openshift-pipelines/pipeline-service-exporter",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "d6d4f669a0818ddf72117207d45a3e664ad7c4cd",
+      "tekton_tree": "317aad69eb4194a13f6e5df95871619fbd5f26f4",
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/pipeline-service-workspace-controller",
+      "url": "https://github.com/openshift-pipelines/pipeline-service-workspace-controller",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "1202bc5391f094cc46b4810fec20852a6e3d5078",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/pipelines-examples",
+      "url": "https://github.com/openshift-pipelines/pipelines-examples",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "6a801ae61b99608fdc355773dd0ec75b1f9de9a9",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/pipelines-multikueue-plugin",
+      "url": "https://github.com/openshift-pipelines/pipelines-multikueue-plugin",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "b28b45b5a01baaa52b2ea1b73e23ce8822ba1677",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/pipelines-tutorial",
+      "url": "https://github.com/openshift-pipelines/pipelines-tutorial",
+      "archived": false,
+      "fork": true,
+      "default_branch": "master",
+      "commit": "c4a305653286d42f4ee512daaab79bd6ae6bc910",
+      "tekton_tree": "6a505d7163277170625f1a90358456db2a91ddf9",
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/plumbing",
+      "url": "https://github.com/openshift-pipelines/plumbing",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "b768e73c61de58acc2163e55e5ac02264273285c",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/pr-agent-settings",
+      "url": "https://github.com/openshift-pipelines/pr-agent-settings",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "dd70ae7571c10736fb7b3277887f932b2fa6e69b",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/release-ready",
+      "url": "https://github.com/openshift-pipelines/release-ready",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "0695ff10f30aa701b431e292fafbb5f75165ecfd",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/release-tektoncd-task",
+      "url": "https://github.com/openshift-pipelines/release-tektoncd-task",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "f592bf90e74ab5d5daea30fb464f5cf63b3928e2",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/release-tests",
+      "url": "https://github.com/openshift-pipelines/release-tests",
+      "archived": false,
+      "fork": false,
+      "default_branch": "master",
+      "commit": "5bed519b85821919a3912473a9c09dc31bdc9e2f",
+      "tekton_tree": "37397cf9e788d4acacb0f6ba1706cfa30be5d255",
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/release-tests-ginkgo",
+      "url": "https://github.com/openshift-pipelines/release-tests-ginkgo",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "9b0d12f190c5960de501318cf1d62f546dfece87",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/release-tests-infra",
+      "url": "https://github.com/openshift-pipelines/release-tests-infra",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "9d951d4fb8a0a0998e7d8bd170dea6e9d923d57a",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/release-trace",
+      "url": "https://github.com/openshift-pipelines/release-trace",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "b4adc1ac60a4a9b5bba2070cdf8e0656134ab7a7",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/release-ui-tests",
+      "url": "https://github.com/openshift-pipelines/release-ui-tests",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "8aa4e9de5035a84268c92522a00e21fa4a355e68",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/resolver-cache-qe-reproducer",
+      "url": "https://github.com/openshift-pipelines/resolver-cache-qe-reproducer",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "8c7c26596fe9fbf7bb36027909a7c9e7fff2e1fd",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/serve-tkn-cli",
+      "url": "https://github.com/openshift-pipelines/serve-tkn-cli",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "2db790edda12461e2aca45ebeb2e9675aef24a9e",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/setup-tektoncd",
+      "url": "https://github.com/openshift-pipelines/setup-tektoncd",
+      "archived": true,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "cc9182a0699f905c0bb1aae128d2c4f3f7018086",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/setup-tektoncd-cli",
+      "url": "https://github.com/openshift-pipelines/setup-tektoncd-cli",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "97ec590e205290450ef6803fdb9851a2f0e2c45c",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/skills",
+      "url": "https://github.com/openshift-pipelines/skills",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "3172ce8fc8e423faf21ee5ea78ef51b61a05fd73",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/skipjira",
+      "url": "https://github.com/openshift-pipelines/skipjira",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "eb6191a40a590214191dd7bbe413122f11c37f97",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/streamstress",
+      "url": "https://github.com/openshift-pipelines/streamstress",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "3609680af6b3285b947024490b0037c907a1b347",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/syncer-service",
+      "url": "https://github.com/openshift-pipelines/syncer-service",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "1ddf608c8111bff43337b898e7dbd0f073833454",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/task-buildpacks",
+      "url": "https://github.com/openshift-pipelines/task-buildpacks",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "ec1e293ed82f7c7292591ed1dd04cde5919c032f",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/task-containers",
+      "url": "https://github.com/openshift-pipelines/task-containers",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "559ff1077f827dd51ce7807d8161bd2d851731b5",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/task-git",
+      "url": "https://github.com/openshift-pipelines/task-git",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "05e8a67f79ed5d1593a2298a610c7dd3c0bba967",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/task-maven",
+      "url": "https://github.com/openshift-pipelines/task-maven",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "c0430dad1b6aa116d662e20942ae2302f2643564",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/task-openshift",
+      "url": "https://github.com/openshift-pipelines/task-openshift",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "717b7730efcfa9c9b20ae107525add9d511cfedd",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/tekshift-team-automation",
+      "url": "https://github.com/openshift-pipelines/tekshift-team-automation",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "c2a7c362f4a4fd9b45c1bff90e5706496f036626",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/tekton-assist",
+      "url": "https://github.com/openshift-pipelines/tekton-assist",
+      "archived": true,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "b20e3fcf24d715c017ed84b291acae7b9ebd2284",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/tekton-caches",
+      "url": "https://github.com/openshift-pipelines/tekton-caches",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "0402df99ab2b56bb5033b1f03a934065b1055ed8",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/tekton-kueue",
+      "url": "https://github.com/openshift-pipelines/tekton-kueue",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "f3a26fde7578ce5b5bafe7d4ee193736431340ca",
+      "tekton_tree": null,
+      "konflux_tree": "8eff33efced38685f5d9795ee89d5607d888aed0"
+    },
+    {
+      "repository": "openshift-pipelines/tekton-pac-status-poc",
+      "url": "https://github.com/openshift-pipelines/tekton-pac-status-poc",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "60fa726fc4878c97c26235bf088070150ee2054c",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/tekton-task-group",
+      "url": "https://github.com/openshift-pipelines/tekton-task-group",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "2640c1276d6c3860322f416f8875213adf3a8c5f",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/tekton-wrap-pipeline",
+      "url": "https://github.com/openshift-pipelines/tekton-wrap-pipeline",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "83386ca738d255109b6020320df82094fb5689dc",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/tektoncd-catalog",
+      "url": "https://github.com/openshift-pipelines/tektoncd-catalog",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "765ffd654d2893ce77999805db443110bbaef5db",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/tektoncd-chains",
+      "url": "https://github.com/openshift-pipelines/tektoncd-chains",
+      "archived": false,
+      "fork": true,
+      "default_branch": "main",
+      "commit": "df9540735562a0c2bcac9f4ed37d258a9f936fa8",
+      "tekton_tree": "4a19f9e56fbf0a0a2e7bcef39daadc0adfd71f9b",
+      "konflux_tree": "6ce8449d6733895cae656ca3c2dca6e8ef360b61"
+    },
+    {
+      "repository": "openshift-pipelines/tektoncd-cli",
+      "url": "https://github.com/openshift-pipelines/tektoncd-cli",
+      "archived": false,
+      "fork": true,
+      "default_branch": "main",
+      "commit": "5b60d8c5743d2b51036ff808bcfd88615ab3bd98",
+      "tekton_tree": null,
+      "konflux_tree": "32f08b95e56acf94462564fec377bfba18a53943"
+    },
+    {
+      "repository": "openshift-pipelines/tektoncd-git-clone",
+      "url": "https://github.com/openshift-pipelines/tektoncd-git-clone",
+      "archived": false,
+      "fork": true,
+      "default_branch": "main",
+      "commit": "5094e263f7741428a8b89ed7c07bcd9a3a075647",
+      "tekton_tree": "80987de19954e0aeb736e18d9b9c77b7eb626ead",
+      "konflux_tree": "be9fd3af583e26cbb9fdd7c776c31683bebadb4c"
+    },
+    {
+      "repository": "openshift-pipelines/tektoncd-hub",
+      "url": "https://github.com/openshift-pipelines/tektoncd-hub",
+      "archived": false,
+      "fork": true,
+      "default_branch": "main",
+      "commit": "fe2c2375bac11923db1b492119ce9083146b5f52",
+      "tekton_tree": "4a19f9e56fbf0a0a2e7bcef39daadc0adfd71f9b",
+      "konflux_tree": "dded4e5fccccba9120dd57e1a9b52134518d41b8"
+    },
+    {
+      "repository": "openshift-pipelines/tektoncd-killercoda",
+      "url": "https://github.com/openshift-pipelines/tektoncd-killercoda",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "1266c6f499af7e51468dc7f7d8455151bf2884f9",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/tektoncd-pipeline",
+      "url": "https://github.com/openshift-pipelines/tektoncd-pipeline",
+      "archived": false,
+      "fork": true,
+      "default_branch": "main",
+      "commit": "c1beb0b2c084160a849cdf6bd1cd43f56bb5e461",
+      "tekton_tree": "3bec73196b48a7336d709638c092de7cd8178376",
+      "konflux_tree": "387926310551158e2c7312a0643c5d4bc3947831"
+    },
+    {
+      "repository": "openshift-pipelines/tektoncd-plumbing",
+      "url": "https://github.com/openshift-pipelines/tektoncd-plumbing",
+      "archived": false,
+      "fork": true,
+      "default_branch": "main",
+      "commit": "d9cf5afb0d5aea53c6adbd16f33a13afed35373d",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/tektoncd-pruner",
+      "url": "https://github.com/openshift-pipelines/tektoncd-pruner",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "df141852526a180bd142da18f15d8f513fa95959",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/tektoncd-results",
+      "url": "https://github.com/openshift-pipelines/tektoncd-results",
+      "archived": false,
+      "fork": true,
+      "default_branch": "main",
+      "commit": "48f4f55285daac947afa0bcc4f2b5475237c9643",
+      "tekton_tree": null,
+      "konflux_tree": "c6f04b6786aeb8e65b22121d3f9ca8b183dadcfe"
+    },
+    {
+      "repository": "openshift-pipelines/tektoncd-results-for-konflux",
+      "url": "https://github.com/openshift-pipelines/tektoncd-results-for-konflux",
+      "archived": false,
+      "fork": true,
+      "default_branch": "downstream-0.14.0-2",
+      "commit": "425fcd0988b50965139238038e0d3bd3cb4f8bbc",
+      "tekton_tree": "914950bc78c1cccc472c8448a53b42e582b542fb",
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/tektoncd-triggers",
+      "url": "https://github.com/openshift-pipelines/tektoncd-triggers",
+      "archived": false,
+      "fork": true,
+      "default_branch": "main",
+      "commit": "5e09f8c8f6dd7b1ec244aa6dce34d2ae6e393131",
+      "tekton_tree": "4a19f9e56fbf0a0a2e7bcef39daadc0adfd71f9b",
+      "konflux_tree": "2341269ee5c7a9739b7e3c7bcf6766d61020df45"
+    },
+    {
+      "repository": "openshift-pipelines/tkn-agent",
+      "url": "https://github.com/openshift-pipelines/tkn-agent",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "d712c94a556890ec55d918d06cb5f9d343422069",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/tkn-autogenerate",
+      "url": "https://github.com/openshift-pipelines/tkn-autogenerate",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "3039aeb83e40a7f6bfecf575566bef5581fe49d3",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/tkn-fl",
+      "url": "https://github.com/openshift-pipelines/tkn-fl",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "8f8a57ed45df51e056acb1099f8b32a61bf2f33f",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/tkn-innerloop",
+      "url": "https://github.com/openshift-pipelines/tkn-innerloop",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "c05878019243e611329b415954f7a769b21d1190",
+      "tekton_tree": "e88ff3013b096fc139496baa043119915725951e",
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/toolbox",
+      "url": "https://github.com/openshift-pipelines/toolbox",
+      "archived": false,
+      "fork": false,
+      "default_branch": "main",
+      "commit": "e8bce2ddb57f1406aa7740b6f531cb21c52dd665",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/vote-api",
+      "url": "https://github.com/openshift-pipelines/vote-api",
+      "archived": true,
+      "fork": false,
+      "default_branch": "master",
+      "commit": "793ef5db5f3fb5c230cb1185d1e2dbcb35963569",
+      "tekton_tree": null,
+      "konflux_tree": null
+    },
+    {
+      "repository": "openshift-pipelines/vote-ui",
+      "url": "https://github.com/openshift-pipelines/vote-ui",
+      "archived": true,
+      "fork": false,
+      "default_branch": "master",
+      "commit": "d187f48747a4235adf2afd8fd0f20239634bf8d6",
+      "tekton_tree": null,
+      "konflux_tree": null
+    }
+  ],
+  "matched_directory_listings": [
+    {
+      "repo": "openshift-pipelines/ecosystem-images",
+      "commit": "6bef2e3d5357727a7aca07ac6216d5e14eb566d6",
+      "folders": [
+        {
+          "path": ".tekton",
+          "tree_sha": "54c8d385c2faf8bb54b50e5874dcca216a02310f",
+          "entries": [
+            {
+              "path": ".placeholder",
+              "type": "blob",
+              "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+            },
+            {
+              "path": "boussole.yaml",
+              "type": "blob",
+              "sha": "cbfc20d7d50497bd62f76c52304b8dbf8986d508"
+            },
+            {
+              "path": "ecosystem-images-1-18-git-init-pull-request.yaml",
+              "type": "blob",
+              "sha": "3e0928064c20e578d128586603348a7524082d9e"
+            },
+            {
+              "path": "ecosystem-images-1-18-git-init-push.yaml",
+              "type": "blob",
+              "sha": "269d4e5363b9988f996544d3e67761d89c6db7c9"
+            },
+            {
+              "path": "ecosystem-images-1-18-opc-pull-request.yaml",
+              "type": "blob",
+              "sha": "8c69910bd393a6d38b5c7529434eccf6f3c8e2ef"
+            },
+            {
+              "path": "ecosystem-images-1-18-opc-push.yaml",
+              "type": "blob",
+              "sha": "e76a9a22131a5f12c7838fc4f2b0045607a8d061"
+            },
+            {
+              "path": "ecosystem-images-next-git-init-pull-request.yaml",
+              "type": "blob",
+              "sha": "6dae4e1a8929f62167dfe6476f67dcad25170265"
+            },
+            {
+              "path": "ecosystem-images-next-git-init-push.yaml",
+              "type": "blob",
+              "sha": "8ad98f73e56b9b29dca92454af30a956a2a8fe6c"
+            },
+            {
+              "path": "ecosystem-images-next-opc-pull-request.yaml",
+              "type": "blob",
+              "sha": "7b5f2fb6128cee12af0304f32de07be8a12012c6"
+            },
+            {
+              "path": "ecosystem-images-next-opc-push.yaml",
+              "type": "blob",
+              "sha": "297c3d78b7e063a88d6e947400d2b2b667867963"
+            }
+          ]
+        },
+        {
+          "path": ".konflux",
+          "tree_sha": "03d3e8c21018e5b30433304201c53679d8ee4e53",
+          "entries": [
+            {
+              "path": "1.18",
+              "type": "tree",
+              "sha": "28421033d8c8f92930876755c75e0f34b2268be7"
+            },
+            {
+              "path": "dockerfiles",
+              "type": "tree",
+              "sha": "c7a1d3bf1d49f2d554961400d8eae1fd2dbc3809"
+            },
+            {
+              "path": "next",
+              "type": "tree",
+              "sha": "c6bc52348a6756e3ea15d51a68713bf9f48ceb20"
+            },
+            {
+              "path": "patches",
+              "type": "tree",
+              "sha": "a4591e9c40910dd13f48a6ee57dbb15edcd83bc3"
+            },
+            {
+              "path": "rpms",
+              "type": "tree",
+              "sha": "d40ee8223b938bf05a6a4b736430e727d740c4be"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "repo": "openshift-pipelines/hack",
+      "commit": "8143c348c1c9eaa61ea4c81b6b1f9b8288fdb9d5",
+      "folders": [
+        {
+          "path": ".konflux",
+          "tree_sha": "c3d5d3d5e108e67d0adcc4387d1da9f524a60d7f",
+          "entries": [
+            {
+              "path": "config",
+              "type": "tree",
+              "sha": "a500a623e5d116e8e19241ec4105a24c12ea270f"
+            },
+            {
+              "path": "konflux-release-data",
+              "type": "tree",
+              "sha": "74bab0bf5aad872e816c3a1f58175334b3fa2a8b"
+            },
+            {
+              "path": "multicluster-proxy-aae",
+              "type": "tree",
+              "sha": "2d7f38fcfa6c99f3636fe9a257f271ca04d950af"
+            },
+            {
+              "path": "openshift-pipelines",
+              "type": "tree",
+              "sha": "ff874d68fec5b7ede345d3fe20e3fd06c9ad6edd"
+            },
+            {
+              "path": "pyxis-repo-configs",
+              "type": "tree",
+              "sha": "a5e6dd027c7b0492f82628395a88f29c6a400896"
+            },
+            {
+              "path": "syncer-service",
+              "type": "tree",
+              "sha": "b0e8a28aaddb36f3165f23f7c3df5d116f316451"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "repo": "openshift-pipelines/lightspeed-rag-content",
+      "commit": "bb8ba23b68caf7a2e2656048dce5450d5b13a3ee",
+      "folders": [
+        {
+          "path": ".tekton",
+          "tree_sha": "bbf201b23f2a9a545d9c1657fe4b9154af045aca",
+          "entries": [
+            {
+              "path": "integration-tests",
+              "type": "tree",
+              "sha": "8dc61c9eee372681d00e5e0ddd85b3441cb89fc5"
+            },
+            {
+              "path": "openshift-pipelines-lightspeed-rag-content-pull-request.yaml",
+              "type": "blob",
+              "sha": "b7e7e78a7088262af38ca260e078bd76ebdb3117"
+            },
+            {
+              "path": "openshift-pipelines-lightspeed-rag-content-push.yaml",
+              "type": "blob",
+              "sha": "52d46f4822c203a5a27912705710cb90674fefe7"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "repo": "openshift-pipelines/operator",
+      "commit": "9a8f5f78d9c462ed47d2fe05957be05f879643b0",
+      "folders": [
+        {
+          "path": ".tekton",
+          "tree_sha": "4b7d9a8ad1f91e2bc131cae732a299340a4889a0",
+          "entries": [
+            {
+              "path": "docker-build-ta.yaml",
+              "type": "blob",
+              "sha": "28fe7f2c8c5d3725df54dc6c59ca330cbd5ec204"
+            },
+            {
+              "path": "fbc-build.yaml",
+              "type": "blob",
+              "sha": "6c9aef88e9cf357a0f8a894ce0270ed49b729510"
+            }
+          ]
+        },
+        {
+          "path": ".konflux",
+          "tree_sha": "d60e12d78b44db9c0d70f2c0d2144c8d0cb91018",
+          "entries": [
+            {
+              "path": "tekton",
+              "type": "tree",
+              "sha": "04ac841f67b0590bf244f8436d9a3a815c6f7dc9"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "repo": "openshift-pipelines/operator-tooling",
+      "commit": "0daddf693860c801db80a73b95b8a7e9256ee35d",
+      "folders": [
+        {
+          "path": ".tekton",
+          "tree_sha": "27e3b354987c5ed732d0e4193db01ab9dbcec05f",
+          "entries": [
+            {
+              "path": "pull-request.yaml",
+              "type": "blob",
+              "sha": "a44a7f9b7a2bdcf09b567df094ef490970a86a71"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "repo": "openshift-pipelines/p12n-console-plugin",
+      "commit": "929d7d2ad4d5dff20c24f5043f75bff8dfae74a2",
+      "folders": [
+        {
+          "path": ".tekton",
+          "tree_sha": "4a19f9e56fbf0a0a2e7bcef39daadc0adfd71f9b",
+          "entries": [
+            {
+              "path": ".placeholder",
+              "type": "blob",
+              "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+            }
+          ]
+        },
+        {
+          "path": ".konflux",
+          "tree_sha": "ff50ab66ecdf1da53d0b2189ae87c33c58bb26b1",
+          "entries": [
+            {
+              "path": ".placeholder",
+              "type": "blob",
+              "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+            },
+            {
+              "path": "README.md",
+              "type": "blob",
+              "sha": "cfa500cb756abfc0eae4000ef251d3d9444e71d8"
+            },
+            {
+              "path": "dockerfiles",
+              "type": "tree",
+              "sha": "8be7c5cc5bebde2eb018b6d92cfe43b08db7d0be"
+            },
+            {
+              "path": "patches",
+              "type": "tree",
+              "sha": "4a19f9e56fbf0a0a2e7bcef39daadc0adfd71f9b"
+            },
+            {
+              "path": "rpms",
+              "type": "tree",
+              "sha": "624201c61a67174fdec4be1868b4b012efe14f0c"
+            },
+            {
+              "path": "tekton",
+              "type": "tree",
+              "sha": "08ff9115a55f1f428170c1f24281f7d881d0e5fc"
+            },
+            {
+              "path": "yarn.lock",
+              "type": "blob",
+              "sha": "2187a88ac512d8a598ddc96b088e8d4482087581"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "repo": "openshift-pipelines/p12n-console-plugin-pf5",
+      "commit": "7977c84f03e6bc297cf57a328223430568d4f046",
+      "folders": [
+        {
+          "path": ".tekton",
+          "tree_sha": "4a19f9e56fbf0a0a2e7bcef39daadc0adfd71f9b",
+          "entries": [
+            {
+              "path": ".placeholder",
+              "type": "blob",
+              "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+            }
+          ]
+        },
+        {
+          "path": ".konflux",
+          "tree_sha": "ff50ab66ecdf1da53d0b2189ae87c33c58bb26b1",
+          "entries": [
+            {
+              "path": ".placeholder",
+              "type": "blob",
+              "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+            },
+            {
+              "path": "README.md",
+              "type": "blob",
+              "sha": "cfa500cb756abfc0eae4000ef251d3d9444e71d8"
+            },
+            {
+              "path": "dockerfiles",
+              "type": "tree",
+              "sha": "8be7c5cc5bebde2eb018b6d92cfe43b08db7d0be"
+            },
+            {
+              "path": "patches",
+              "type": "tree",
+              "sha": "4a19f9e56fbf0a0a2e7bcef39daadc0adfd71f9b"
+            },
+            {
+              "path": "rpms",
+              "type": "tree",
+              "sha": "624201c61a67174fdec4be1868b4b012efe14f0c"
+            },
+            {
+              "path": "tekton",
+              "type": "tree",
+              "sha": "08ff9115a55f1f428170c1f24281f7d881d0e5fc"
+            },
+            {
+              "path": "yarn.lock",
+              "type": "blob",
+              "sha": "2187a88ac512d8a598ddc96b088e8d4482087581"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "repo": "openshift-pipelines/p12n-manual-approval-gate",
+      "commit": "a606c8e36a959115a5ab5f2ca9cd49f36472900a",
+      "folders": [
+        {
+          "path": ".tekton",
+          "tree_sha": "4a19f9e56fbf0a0a2e7bcef39daadc0adfd71f9b",
+          "entries": [
+            {
+              "path": ".placeholder",
+              "type": "blob",
+              "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+            }
+          ]
+        },
+        {
+          "path": ".konflux",
+          "tree_sha": "452d07e004a2fa3ea6492b3581dfb191dedd6042",
+          "entries": [
+            {
+              "path": "README.md",
+              "type": "blob",
+              "sha": "cfa500cb756abfc0eae4000ef251d3d9444e71d8"
+            },
+            {
+              "path": "dockerfiles",
+              "type": "tree",
+              "sha": "cf9c603d68f1ba013b7838079e23ba250078f6aa"
+            },
+            {
+              "path": "patches",
+              "type": "tree",
+              "sha": "dc8bf5187ad0ce3a8007c447072f0fd08c61cbc8"
+            },
+            {
+              "path": "rpms",
+              "type": "tree",
+              "sha": "fb6ab40d5a7088f0a8ef8c3e31016f719d555ca5"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "repo": "openshift-pipelines/p12n-opc",
+      "commit": "8180d478152be3ce2c966ab6460a988aa49517ad",
+      "folders": [
+        {
+          "path": ".konflux",
+          "tree_sha": "e9c0b2697b65eb37ddc2421beadf2944c97d4929",
+          "entries": [
+            {
+              "path": "dockerfiles",
+              "type": "tree",
+              "sha": "8c76468a2683557d3a84daca436b420a4eafd731"
+            },
+            {
+              "path": "patches",
+              "type": "tree",
+              "sha": "4a19f9e56fbf0a0a2e7bcef39daadc0adfd71f9b"
+            },
+            {
+              "path": "rpms",
+              "type": "tree",
+              "sha": "2aa42b8be76d6bbe5623e5c5ccde0f5b8f07e010"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "repo": "openshift-pipelines/pac-downstream",
+      "commit": "2fbd85dd6ee77256d83b72d893d5a57dd1d455b3",
+      "folders": [
+        {
+          "path": ".tekton",
+          "tree_sha": "4a19f9e56fbf0a0a2e7bcef39daadc0adfd71f9b",
+          "entries": [
+            {
+              "path": ".placeholder",
+              "type": "blob",
+              "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+            }
+          ]
+        },
+        {
+          "path": ".konflux",
+          "tree_sha": "4a3f4cb089bd4f259b0c6371509ba3857f32ff7e",
+          "entries": [
+            {
+              "path": "README.md",
+              "type": "blob",
+              "sha": "f746c7cc725063c18592edd6aa6ad4538ebc4422"
+            },
+            {
+              "path": "dockerfiles",
+              "type": "tree",
+              "sha": "30e74c2fb15d736a58c17bcdd6c2bcd45e56e249"
+            },
+            {
+              "path": "patches",
+              "type": "tree",
+              "sha": "4a19f9e56fbf0a0a2e7bcef39daadc0adfd71f9b"
+            },
+            {
+              "path": "rpms",
+              "type": "tree",
+              "sha": "eb11bb473f9afb753e0c652930567ff26269bf5d"
+            },
+            {
+              "path": "tekton",
+              "type": "tree",
+              "sha": "08ff9115a55f1f428170c1f24281f7d881d0e5fc"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "repo": "openshift-pipelines/pipeline-service",
+      "commit": "5b34974a82703dfba477bbec73b0658d49ddc69b",
+      "folders": [
+        {
+          "path": ".tekton",
+          "tree_sha": "c32e9c95e14d5a1cb5f166ddc9dc2a04ebab8a32",
+          "entries": [
+            {
+              "path": "cleanup-existing-clusters.yaml",
+              "type": "blob",
+              "sha": "e4ce88cc97b917446a47a3770b1b3ef169705482"
+            },
+            {
+              "path": "open-infra-deployment-pr-osp-nightly.save",
+              "type": "blob",
+              "sha": "7d0e662ee65dc15ab14345b73125d3f01a45cea5"
+            },
+            {
+              "path": "open-infra-deployment-pr.save",
+              "type": "blob",
+              "sha": "558aa7a8764f98aebe52b2e1e544971275f23dac"
+            },
+            {
+              "path": "pipeline-service-upgrade-test-ocp-414.yaml",
+              "type": "blob",
+              "sha": "2bfb9bd3567b049a184bf73dc61e0aef567dfb77"
+            },
+            {
+              "path": "pipeline",
+              "type": "tree",
+              "sha": "70500e03f47a95a935f90c36f1f37dc448f86c9e"
+            },
+            {
+              "path": "tasks",
+              "type": "tree",
+              "sha": "94695c087c7eb1d8dc5c64ca95fff597aafb72d0"
+            },
+            {
+              "path": "test-docker-images-build.yaml",
+              "type": "blob",
+              "sha": "7183d495d321b7acf3da4a33a066c1fed20581aa"
+            },
+            {
+              "path": "test-pipeline-service-deployment-ocp-414.yaml",
+              "type": "blob",
+              "sha": "4a2e8d4d051a2c2b6151ddc2e7a5aabfbbe4286d"
+            },
+            {
+              "path": "test-pipeline-service-static-code-analysis.yaml",
+              "type": "blob",
+              "sha": "16d311112f26c33d050d486b2ead780c748c6650"
+            },
+            {
+              "path": "test-rhtap-e2e.yaml",
+              "type": "blob",
+              "sha": "885b918db86b5a01d8e8568b31c7106d0466c179"
+            },
+            {
+              "path": "update-dependencies.yaml",
+              "type": "blob",
+              "sha": "a1edcbe8f083c539315253c105b48a24dcb63e2e"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "repo": "openshift-pipelines/pipeline-service-exporter",
+      "commit": "d6d4f669a0818ddf72117207d45a3e664ad7c4cd",
+      "folders": [
+        {
+          "path": ".tekton",
+          "tree_sha": "317aad69eb4194a13f6e5df95871619fbd5f26f4",
+          "entries": [
+            {
+              "path": "pull-request.yaml",
+              "type": "blob",
+              "sha": "2800950e70a75dee15048109c5bbfea19ff42d44"
+            },
+            {
+              "path": "push.yaml",
+              "type": "blob",
+              "sha": "600dc5ec4f14758025d836f833e9cb02e0cf289e"
+            },
+            {
+              "path": "unit-test.yaml",
+              "type": "blob",
+              "sha": "f695bf0906ccaf4820db6c55e90f422b127ef12b"
+            },
+            {
+              "path": "update-pipeline-service.save",
+              "type": "blob",
+              "sha": "4b686426d6f47513162db79b0c952113b7bbaee6"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "repo": "openshift-pipelines/pipelines-tutorial",
+      "commit": "c4a305653286d42f4ee512daaab79bd6ae6bc910",
+      "folders": [
+        {
+          "path": ".tekton",
+          "tree_sha": "6a505d7163277170625f1a90358456db2a91ddf9",
+          "entries": [
+            {
+              "path": "pipelinerun.yaml",
+              "type": "blob",
+              "sha": "0c24b3b2a40119bf4f98d791b55ad92e400a3685"
+            },
+            {
+              "path": "tekton.yaml",
+              "type": "blob",
+              "sha": "8aa5920f2580b49c5d8482cc9d33c28112478e31"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "repo": "openshift-pipelines/release-tests",
+      "commit": "5bed519b85821919a3912473a9c09dc31bdc9e2f",
+      "folders": [
+        {
+          "path": ".tekton",
+          "tree_sha": "37397cf9e788d4acacb0f6ba1706cfa30be5d255",
+          "entries": [
+            {
+              "path": "acceptance-tests-pr.yaml",
+              "type": "blob",
+              "sha": "1a25ab9e2459bc80ee3a964ab3780826f503478a"
+            },
+            {
+              "path": "create-ci-image-pipelinerun.yaml",
+              "type": "blob",
+              "sha": "a78d64fb450e5762b6c62442d8f793c848ac2f1a"
+            },
+            {
+              "path": "go-lint-pipelinerun.yaml",
+              "type": "blob",
+              "sha": "3ca4127dd205e96862a47b09f850c646f1ca8108"
+            },
+            {
+              "path": "upload-test-cases-to-polarion.yaml",
+              "type": "blob",
+              "sha": "fd7463fba17cf33362a40f58f2a05d4c967832f5"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "repo": "openshift-pipelines/tekton-kueue",
+      "commit": "f3a26fde7578ce5b5bafe7d4ee193736431340ca",
+      "folders": [
+        {
+          "path": ".konflux",
+          "tree_sha": "8eff33efced38685f5d9795ee89d5607d888aed0",
+          "entries": [
+            {
+              "path": "dockerfiles",
+              "type": "tree",
+              "sha": "aa17e11518533066f6456419fd8f79f194c8cb5b"
+            },
+            {
+              "path": "patches",
+              "type": "tree",
+              "sha": "b809378a5ccf9fb5dbcf0d821f8bb263a3bbc87e"
+            },
+            {
+              "path": "rpms",
+              "type": "tree",
+              "sha": "5faf85a5ad48963e66aa1fced5110d4cdc5c2fd4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "repo": "openshift-pipelines/tektoncd-chains",
+      "commit": "df9540735562a0c2bcac9f4ed37d258a9f936fa8",
+      "folders": [
+        {
+          "path": ".tekton",
+          "tree_sha": "4a19f9e56fbf0a0a2e7bcef39daadc0adfd71f9b",
+          "entries": [
+            {
+              "path": ".placeholder",
+              "type": "blob",
+              "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+            }
+          ]
+        },
+        {
+          "path": ".konflux",
+          "tree_sha": "6ce8449d6733895cae656ca3c2dca6e8ef360b61",
+          "entries": [
+            {
+              "path": "README.md",
+              "type": "blob",
+              "sha": "f746c7cc725063c18592edd6aa6ad4538ebc4422"
+            },
+            {
+              "path": "dockerfiles",
+              "type": "tree",
+              "sha": "32352ab48568f1c138275df67d858e5a10e69f00"
+            },
+            {
+              "path": "patches",
+              "type": "tree",
+              "sha": "4a19f9e56fbf0a0a2e7bcef39daadc0adfd71f9b"
+            },
+            {
+              "path": "rpms",
+              "type": "tree",
+              "sha": "eb11bb473f9afb753e0c652930567ff26269bf5d"
+            },
+            {
+              "path": "tekton",
+              "type": "tree",
+              "sha": "08ff9115a55f1f428170c1f24281f7d881d0e5fc"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "repo": "openshift-pipelines/tektoncd-cli",
+      "commit": "5b60d8c5743d2b51036ff808bcfd88615ab3bd98",
+      "folders": [
+        {
+          "path": ".konflux",
+          "tree_sha": "32f08b95e56acf94462564fec377bfba18a53943",
+          "entries": [
+            {
+              "path": "README.md",
+              "type": "blob",
+              "sha": "f746c7cc725063c18592edd6aa6ad4538ebc4422"
+            },
+            {
+              "path": "dockerfiles",
+              "type": "tree",
+              "sha": "31d31b993b0bdef874d1cb88ce04f9aac56bc7dd"
+            },
+            {
+              "path": "patches",
+              "type": "tree",
+              "sha": "4a19f9e56fbf0a0a2e7bcef39daadc0adfd71f9b"
+            },
+            {
+              "path": "rpms",
+              "type": "tree",
+              "sha": "eb11bb473f9afb753e0c652930567ff26269bf5d"
+            },
+            {
+              "path": "tekton",
+              "type": "tree",
+              "sha": "08ff9115a55f1f428170c1f24281f7d881d0e5fc"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "repo": "openshift-pipelines/tektoncd-git-clone",
+      "commit": "5094e263f7741428a8b89ed7c07bcd9a3a075647",
+      "folders": [
+        {
+          "path": ".tekton",
+          "tree_sha": "80987de19954e0aeb736e18d9b9c77b7eb626ead",
+          "entries": [
+            {
+              "path": "git-init-pull-request.yaml",
+              "type": "blob",
+              "sha": "690d507eb2c2b5065788b490e2815ac3919e4b5b"
+            },
+            {
+              "path": "git-init-push.yaml",
+              "type": "blob",
+              "sha": "255005aced083cdf2030e5b2fce343efdc4b1f2f"
+            }
+          ]
+        },
+        {
+          "path": ".konflux",
+          "tree_sha": "be9fd3af583e26cbb9fdd7c776c31683bebadb4c",
+          "entries": [
+            {
+              "path": "dockerfiles",
+              "type": "tree",
+              "sha": "56888cea86d622337aee21016b45084199fffb0a"
+            },
+            {
+              "path": "rpms",
+              "type": "tree",
+              "sha": "d140008f79a7fc5ab4655e3508d96f8e50530f77"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "repo": "openshift-pipelines/tektoncd-hub",
+      "commit": "fe2c2375bac11923db1b492119ce9083146b5f52",
+      "folders": [
+        {
+          "path": ".tekton",
+          "tree_sha": "4a19f9e56fbf0a0a2e7bcef39daadc0adfd71f9b",
+          "entries": [
+            {
+              "path": ".placeholder",
+              "type": "blob",
+              "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+            }
+          ]
+        },
+        {
+          "path": ".konflux",
+          "tree_sha": "dded4e5fccccba9120dd57e1a9b52134518d41b8",
+          "entries": [
+            {
+              "path": "README.md",
+              "type": "blob",
+              "sha": "f746c7cc725063c18592edd6aa6ad4538ebc4422"
+            },
+            {
+              "path": "dockerfiles",
+              "type": "tree",
+              "sha": "a82d63202878889a50939f94a50c670e55c18605"
+            },
+            {
+              "path": "patches",
+              "type": "tree",
+              "sha": "4a19f9e56fbf0a0a2e7bcef39daadc0adfd71f9b"
+            },
+            {
+              "path": "rpms",
+              "type": "tree",
+              "sha": "63ab024fbfa0b457f4e74853018649dae66cab4f"
+            },
+            {
+              "path": "tekton",
+              "type": "tree",
+              "sha": "08ff9115a55f1f428170c1f24281f7d881d0e5fc"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "repo": "openshift-pipelines/tektoncd-pipeline",
+      "commit": "c1beb0b2c084160a849cdf6bd1cd43f56bb5e461",
+      "folders": [
+        {
+          "path": ".tekton",
+          "tree_sha": "3bec73196b48a7336d709638c092de7cd8178376",
+          "entries": [
+            {
+              "path": "docker-build.yaml",
+              "type": "blob",
+              "sha": "68247bc9b689c8c14342e0c1ec325011298c85e6"
+            }
+          ]
+        },
+        {
+          "path": ".konflux",
+          "tree_sha": "387926310551158e2c7312a0643c5d4bc3947831",
+          "entries": [
+            {
+              "path": "README.md",
+              "type": "blob",
+              "sha": "4914005ac29f1b394732147b195468b0d1b6df3e"
+            },
+            {
+              "path": "dockerfiles",
+              "type": "tree",
+              "sha": "11b97102fd1ade4362a21921b473c870577a0eab"
+            },
+            {
+              "path": "patches",
+              "type": "tree",
+              "sha": "a91e32ab7b8766efa682d63689d027777c7ec4de"
+            },
+            {
+              "path": "rpms",
+              "type": "tree",
+              "sha": "eb11bb473f9afb753e0c652930567ff26269bf5d"
+            },
+            {
+              "path": "tekton",
+              "type": "tree",
+              "sha": "08ff9115a55f1f428170c1f24281f7d881d0e5fc"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "repo": "openshift-pipelines/tektoncd-results",
+      "commit": "48f4f55285daac947afa0bcc4f2b5475237c9643",
+      "folders": [
+        {
+          "path": ".konflux",
+          "tree_sha": "c6f04b6786aeb8e65b22121d3f9ca8b183dadcfe",
+          "entries": [
+            {
+              "path": "dockerfiles",
+              "type": "tree",
+              "sha": "aa42bdd70cc783a27b4197542e5847cf7f12253b"
+            },
+            {
+              "path": "patches",
+              "type": "tree",
+              "sha": "4a19f9e56fbf0a0a2e7bcef39daadc0adfd71f9b"
+            },
+            {
+              "path": "rpms",
+              "type": "tree",
+              "sha": "84300684e09321d0bc72c5e9ee0493196860bef4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "repo": "openshift-pipelines/tektoncd-results-for-konflux",
+      "commit": "425fcd0988b50965139238038e0d3bd3cb4f8bbc",
+      "folders": [
+        {
+          "path": ".tekton",
+          "tree_sha": "914950bc78c1cccc472c8448a53b42e582b542fb",
+          "entries": [
+            {
+              "path": "tekton-results-api-pull-request.yaml",
+              "type": "blob",
+              "sha": "b2faffda68e60ff27ff34b696506309bb97eecc5"
+            },
+            {
+              "path": "tekton-results-api-push.yaml",
+              "type": "blob",
+              "sha": "a0e838a5dcbc719722314f549afdd3d57d7604b1"
+            },
+            {
+              "path": "tekton-results-retention-policy-agent-pull-request.yaml",
+              "type": "blob",
+              "sha": "c2aae7c78aa5060ac530c54234cd220b22b2f50f"
+            },
+            {
+              "path": "tekton-results-retention-policy-agent-push.yaml",
+              "type": "blob",
+              "sha": "6e78d19e43d6f498482c42a8309a0a292beecc3c"
+            },
+            {
+              "path": "tekton-results-update-pipeline-service.yaml.save",
+              "type": "blob",
+              "sha": "1d4bbb753f7c5c42b9d3e92fb465edd0918725f9"
+            },
+            {
+              "path": "tekton-results-watcher-pull-request.yaml",
+              "type": "blob",
+              "sha": "eb0af7b6f5ef9e168d4c63c4f206d18c6ccebf04"
+            },
+            {
+              "path": "tekton-results-watcher-push.yaml",
+              "type": "blob",
+              "sha": "e9a9d22d5f8f5b0d50900976e881c58869d0a689"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "repo": "openshift-pipelines/tektoncd-triggers",
+      "commit": "5e09f8c8f6dd7b1ec244aa6dce34d2ae6e393131",
+      "folders": [
+        {
+          "path": ".tekton",
+          "tree_sha": "4a19f9e56fbf0a0a2e7bcef39daadc0adfd71f9b",
+          "entries": [
+            {
+              "path": ".placeholder",
+              "type": "blob",
+              "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+            }
+          ]
+        },
+        {
+          "path": ".konflux",
+          "tree_sha": "2341269ee5c7a9739b7e3c7bcf6766d61020df45",
+          "entries": [
+            {
+              "path": "README.md",
+              "type": "blob",
+              "sha": "f746c7cc725063c18592edd6aa6ad4538ebc4422"
+            },
+            {
+              "path": "dockerfiles",
+              "type": "tree",
+              "sha": "564f6b9da03406d9acea5ebc7689f546977cd183"
+            },
+            {
+              "path": "patches",
+              "type": "tree",
+              "sha": "7b4494a74373dd8a9f14181737bba7b48e52839e"
+            },
+            {
+              "path": "rpms",
+              "type": "tree",
+              "sha": "d0308b8ba07c65c963a3d6fdcddbdb114db5d31b"
+            },
+            {
+              "path": "tekton",
+              "type": "tree",
+              "sha": "08ff9115a55f1f428170c1f24281f7d881d0e5fc"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "repo": "openshift-pipelines/tkn-innerloop",
+      "commit": "c05878019243e611329b415954f7a769b21d1190",
+      "folders": [
+        {
+          "path": ".tekton",
+          "tree_sha": "e88ff3013b096fc139496baa043119915725951e",
+          "entries": [
+            {
+              "path": "ci.yaml",
+              "type": "blob",
+              "sha": "7c0875908c307dba2f082172dd82df3c0cfaef1f"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

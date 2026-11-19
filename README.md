@@ -11,7 +11,8 @@ exactly what was checked. Cluster CI remains authoritative.
 
 The Go CLI implements a deliberately small workflow: select supported independent
 inline checks, review their exact plan, and replay it through existing Podman.
-Remote definitions and Kubernetes-dependent execution remain unsupported.
+Explicit reviewed self-checkout bindings support the pinned real pipeline case.
+General remote execution and Kubernetes-dependent execution remain unsupported.
 
 Prerequisites: Go 1.26.10 or automatic Go toolchain selection, Git, reachable
 Podman, and an explicitly configured model for first-time planning.
@@ -41,11 +42,17 @@ Anthropic uses `ANTHROPIC_API_KEY` or `ANTHROPIC_AUTH_TOKEN`.
 New or changed plans require review before execution. Repeated execution of an
 accepted unchanged plan requires neither another prompt nor a model call.
 
-Plans live under `$XDG_CACHE_HOME/tkn-agent/plans` or the OS user cache directory.
+Shared plans live beside their source definitions: a `.tekton/ci.yaml` plan is
+saved as `.tekton/.tkn-agent/ci.yaml.plan.json`. `.konflux` sources use the
+corresponding `.konflux/.tkn-agent` directory. Other sources use `.tkn-agent`.
+Git provides the shared plan's history. Pending candidates and local approval
+live under `$XDG_CACHE_HOME/tkn-agent/plans` or the OS user cache directory.
 `--refresh` requests fresh analysis. Definition or inspected-helper changes,
 resolved image changes, and timeout changes require review again. Execution
 always uses a fresh snapshot of tracked and non-ignored untracked source files.
-Git metadata, symlinks, and submodules are outside this initial snapshot capability.
+Git metadata and submodules remain outside the snapshot capability. Safe relative
+links to included repository files are preserved; escaping and directory links
+are rejected. Inspected links and their targets both participate in invalidation.
 Checks use the image's interpreter, a writable private workspace, bridge networking,
 and declared literal environment; host provider credentials and proxy variables
 are not forwarded. Cluster CI remains required.
@@ -59,9 +66,31 @@ from your existing hook. `.pre-commit-hooks.yaml` also exposes a system hook;
 configure its pipeline argument and install the binary separately. A warm hook
 needs neither a model name nor provider credentials.
 
+For an explicitly reviewed source checkout, use:
+
+```sh
+tkn-agent verify --local .tekton/test-pipeline-service-static-code-analysis.yaml \
+  --bind-checkout fetch-repository --param target_branch=main
+```
+
+The binding validates the GitHub repository identity, current-event revision
+contract, output workspace and safe subdirectory. It is reported as provided,
+not executed or validated. String parameters remain scoped to their Tasks.
+Source image pull policy is preserved. Other dependencies remain unsupported.
+
+A shared plan never grants execution approval to another user or context.
+It can be loaded without provider access, but needs one local digest approval.
+Only explicit approval writes shared state; normal replay leaves it unchanged.
+Reserved state cannot become its own planning input. Recorded optional input
+absence is invalidated when the configuration appears.
+
 Run `make fmt-check lint test e2e` to check formatting, golangci-lint, race-enabled
 unit tests, and real Podman acceptance tests. The latter use a local recorded
 provider response, not a live paid model.
+`make real-e2e` also drives the pinned pipeline-service clean/defect/repair
+workflow through the actual CLI and original image. It needs GitHub/registry
+access and linux/amd64 execution support. `TKN_AGENT_REAL_SOURCE` can point to an
+existing checkout as a clone source; tests mutate only a fresh private clone.
 
 ## Start here
 
@@ -69,6 +98,12 @@ provider response, not a live paid model.
   acceptance scenarios, and open decisions.
 - [First Go workflow](docs/first-slice.md): automatic selection of smaller checks,
   Podman execution, plan review/replay, and pre-commit behavior.
+- [Real repository assessment](docs/repository-evaluation.md): the pinned
+  OpenShift Pipelines inventory, actual validator experiments, and CLI gaps.
+- [Plan history](docs/plan-state.md): repository-tracked plans, Git history,
+  separate per-user acceptance and explicit updates.
+- [Real workflow contract](docs/real-slice.md): the bounded supported checkout,
+  parameter, workspace and shared-plan behavior.
 - [Test strategy](docs/testing.md): how scenarios become unit, integration,
   end-to-end, and model evaluation checks.
 - [Determinism and evaluations](docs/evaluations.md): immutable execution inputs,

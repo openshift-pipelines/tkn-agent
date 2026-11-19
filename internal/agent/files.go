@@ -15,7 +15,7 @@ import (
 	"sync"
 	"unicode/utf8"
 
-	"golang.org/x/sys/unix"
+	"github.com/openshift-pipelines/tkn-agent/internal/source"
 )
 
 type repository struct {
@@ -33,6 +33,7 @@ type readArgs struct {
 }
 
 type readResult struct {
+	Exists    bool   `json:"exists"`
 	Content   string `json:"content"`
 	Truncated bool   `json:"truncated"`
 }
@@ -43,35 +44,6 @@ func openRepository(directory string) (*repository, error) {
 		return nil, fmt.Errorf("open planning root: %w", err)
 	}
 	return &repository{root: file, inputs: make(map[string]string)}, nil
-}
-
-// Each component is opened relative to a pinned directory descriptor, without
-// following symlinks, including symlinks into credential directories in the root.
-func (r *repository) open(name string) (*os.File, error) {
-	if !safePath(name) {
-		return nil, errors.New("read_file: forbidden repository path")
-	}
-	current := r.root
-	for i, part := range strings.Split(name, "/") {
-		flags := unix.O_RDONLY | unix.O_CLOEXEC | unix.O_NOFOLLOW | unix.O_NONBLOCK
-		if i < len(strings.Split(name, "/"))-1 {
-			flags |= unix.O_DIRECTORY
-		}
-		fd, err := unix.Openat(int(current.Fd()), part, flags, 0)
-		if current != r.root {
-			if closeErr := current.Close(); closeErr != nil {
-				if err == nil {
-					return nil, errors.Join(closeErr, unix.Close(fd))
-				}
-				return nil, errors.Join(err, closeErr)
-			}
-		}
-		if err != nil {
-			return nil, errors.New("read_file: unavailable path or symlink")
-		}
-		current = os.NewFile(uintptr(fd), part)
-	}
-	return current, nil
 }
 
 func (r *repository) read(ctx context.Context, args readArgs) (result readResult, resultErr error) {
@@ -93,10 +65,24 @@ func (r *repository) read(ctx context.Context, args readArgs) (result readResult
 	if args.StartLine < 1 || args.MaxLines < 1 || args.MaxLines > 200 {
 		return readResult{}, errors.New("read_file: start_line must be positive and max_lines within 1..200")
 	}
-	file, err := r.open(args.Path)
-	if err != nil {
+	opened, err := r.open(args.Path)
+	if err != nil && !errors.Is(err, os.ErrNotExist) {
 		return readResult{}, err
 	}
+	if errors.Is(err, os.ErrNotExist) {
+		if previous, exists := r.inputs[opened.name]; exists && previous != "absent" {
+			return readResult{}, errors.New("read_file: planning input disappeared during inspection")
+		}
+		r.inputs[opened.name] = "absent"
+		for name, fingerprint := range opened.links {
+			if previous, exists := r.inputs[name]; exists && previous != fingerprint {
+				return readResult{}, errors.New("read_file: planning symlink changed during inspection")
+			}
+			r.inputs[name] = fingerprint
+		}
+		return readResult{Exists: false}, nil
+	}
+	file := opened.file
 	defer func() { resultErr = errors.Join(resultErr, file.Close()) }()
 	info, err := file.Stat()
 	if err != nil || !info.Mode().IsRegular() {
@@ -115,14 +101,20 @@ func (r *repository) read(ctx context.Context, args readArgs) (result readResult
 	}
 	sum := sha256.Sum256(data)
 	hash := hex.EncodeToString(sum[:])
-	if previous, ok := r.inputs[args.Path]; ok && previous != hash {
+	if previous, ok := r.inputs[opened.name]; ok && previous != hash {
 		return readResult{}, errors.New("read_file: planning input changed during inspection")
 	}
-	r.inputs[args.Path] = hash
+	for name, fingerprint := range opened.links {
+		if previous, exists := r.inputs[name]; exists && previous != fingerprint {
+			return readResult{}, errors.New("read_file: planning symlink changed during inspection")
+		}
+		r.inputs[name] = fingerprint
+	}
+	r.inputs[opened.name] = hash
 	lines := strings.Split(string(data), "\n")
 	start := min(args.StartLine-1, len(lines))
 	end := start + min(args.MaxLines, len(lines)-start)
-	return readResult{Content: strings.Join(lines[start:end], "\n"), Truncated: start > 0 || end < len(lines)}, nil
+	return readResult{Exists: true, Content: strings.Join(lines[start:end], "\n"), Truncated: start > 0 || end < len(lines)}, nil
 }
 
 func (r *repository) hashes() map[string]string {
@@ -132,7 +124,7 @@ func (r *repository) hashes() map[string]string {
 }
 
 func safePath(name string) bool {
-	if name == "" || name == "." || strings.Contains(name, "\\") || path.IsAbs(name) || path.Clean(name) != name {
+	if name == "" || name == "." || strings.Contains(name, "\\") || path.IsAbs(name) || path.Clean(name) != name || source.IsStatePath(name) {
 		return false
 	}
 	for _, part := range strings.Split(strings.ToLower(name), "/") {

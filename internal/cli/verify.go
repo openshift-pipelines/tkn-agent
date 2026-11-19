@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/openshift-pipelines/tkn-agent/internal/agent"
@@ -23,6 +24,8 @@ type report struct {
 	Checks            []runner.Receipt `json:"checks"`
 	Snapshot          string           `json:"snapshot_digest,omitempty"`
 	ClusterCIRequired bool             `json:"cluster_ci_required"`
+	Provided          int              `json:"provided"`
+	SharedPlan        string           `json:"shared_plan,omitempty"`
 }
 
 func verification(ctx context.Context, opts options) (report, int) {
@@ -38,16 +41,31 @@ func verification(ctx context.Context, opts options) (report, int) {
 	if opts.timeout < time.Second || opts.timeout%time.Second != 0 {
 		return block(fmt.Errorf("timeout must be a whole number of seconds, at least one"))
 	}
-	src, err := source.Load(ctx, opts.root, opts.pipeline)
+	parameters := make(map[string]string)
+	for _, raw := range opts.parameters {
+		name, value, exists := strings.Cut(raw, "=")
+		if _, duplicate := parameters[name]; !exists || name == "" || duplicate {
+			return block(fmt.Errorf("each --param must uniquely specify NAME=VALUE"))
+		}
+		parameters[name] = value
+	}
+	src, err := source.Load(ctx, source.Request{Root: opts.root, Pipeline: opts.pipeline, Parameters: parameters, CheckoutTask: opts.checkout})
 	if err != nil {
 		return block(err)
 	}
 	policy := plan.Policy{TimeoutSeconds: int64(opts.timeout / time.Second)}
-	cached, current, err := plan.Read(ctx, src, policy)
+	var cached plan.Cache
+	current := false
+	if opts.refresh {
+		cached.SharedHash, err = plan.SharedHash(ctx, src)
+	} else {
+		cached, current, err = plan.Read(ctx, src, policy)
+	}
 	if err != nil {
 		return block(err)
 	}
-	if !current || opts.refresh {
+	result.SharedPlan = plan.SharedPath(src)
+	if !current {
 		generated, err := selectScope(ctx, src, opts)
 		if err != nil {
 			return block(err)
@@ -56,7 +74,7 @@ func verification(ctx context.Context, opts options) (report, int) {
 		if err != nil {
 			return block(err)
 		}
-		cached = plan.Cache{Plan: p}
+		cached.Plan = p
 	}
 	for _, s := range cached.Plan.Steps {
 		switch s.Decision {
@@ -66,6 +84,8 @@ func verification(ctx context.Context, opts options) (report, int) {
 			result.Skipped++
 		case "unresolved":
 			result.Unresolved++
+		case "provided":
+			result.Provided++
 		}
 	}
 	if result.Selected == 0 {
@@ -88,6 +108,10 @@ func verification(ctx context.Context, opts options) (report, int) {
 	}
 	if opts.approve == result.Digest {
 		cached.Accepted = result.Digest
+		cached, err = plan.SaveShared(ctx, src, cached)
+		if err != nil {
+			return block(err)
+		}
 	}
 	if err := plan.Save(ctx, src, cached); err != nil {
 		return block(err)
@@ -122,7 +146,7 @@ func verification(ctx context.Context, opts options) (report, int) {
 func selectScope(ctx context.Context, src source.Inventory, opts options) (agent.Result, error) {
 	eligible := false
 	for _, step := range src.Steps {
-		eligible = eligible || (!step.Heavy && step.Unsupported == "")
+		eligible = eligible || (!step.Provided && !step.Heavy && step.Unsupported == "")
 	}
 	if !eligible {
 		type decision struct {
@@ -135,7 +159,9 @@ func selectScope(ctx context.Context, src source.Inventory, opts options) (agent
 		}{}
 		for _, step := range src.Steps {
 			d := decision{ID: step.ID, Decision: "unresolved", Reason: step.Unsupported}
-			if step.Heavy {
+			if step.Provided {
+				d.Decision, d.Reason = "provided", "Explicit reviewed self-checkout binding"
+			} else if step.Heavy {
 				d.Decision, d.Reason = "skip", "Heavy or outer-loop operation"
 			}
 			proposal.Steps = append(proposal.Steps, d)
@@ -149,7 +175,8 @@ func selectScope(ctx context.Context, src source.Inventory, opts options) (agent
 	}{Inventory: src, Capabilities: []string{
 		"Podman, private Git-listed source snapshot, literal environment, source scripts",
 		"Snapshot includes tracked and non-ignored untracked files, but no Git metadata",
-		"No source rewrites, task dependencies, results, conditions, matrix, services, remote references or credential bindings",
+		"Only the explicit checkout is provided; its dependencies, workspace aliases and string bindings are resolved",
+		"No other task dependencies, results, conditions, matrix, services, remote execution or credential bindings",
 		"Inspect helpers; leave checks needing unsupported context unresolved",
 	}}
 	data, err := json.Marshal(inventory)

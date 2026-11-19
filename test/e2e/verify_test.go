@@ -155,6 +155,11 @@ func TestPodmanSelectionReviewAndPrecommitReplay(t *testing.T) {
 		clean.Checks[0].ID != "lint/check" || clean.Checks[0].Outcome != "passed" {
 		t.Fatalf("clean local scope failed or heavy task executed: code=%d %+v", code, clean)
 	}
+	freshContext := append(append([]string{}, env...), "OPENAI_API_KEY=", "TKN_AGENT_MODEL=", "XDG_CACHE_HOME="+t.TempDir())
+	inherited, code := invoke(t, invocation{root: root, env: freshContext})
+	if code != 2 || inherited.State != "review-required" || inherited.Digest != pending.Digest || len(inherited.Checks) != 0 || calls.Load() != 1 {
+		t.Fatalf("shared plan reanalysis or inherited approval in fresh context: code=%d %+v calls=%d", code, inherited, calls.Load())
+	}
 	if err := os.WriteFile(filepath.Join(root, "message.txt"), []byte("invalid\n"), 0o600); err != nil {
 		t.Fatal(err)
 	}

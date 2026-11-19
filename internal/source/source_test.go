@@ -26,7 +26,7 @@ func TestInventoryPreservesChecksAndIdentifiesHeavyWork(t *testing.T) {
 	}
 	root, path := fixture(t, string(data))
 
-	got, err := Load(context.Background(), root, path)
+	got, err := Load(context.Background(), Request{Root: root, Pipeline: path})
 
 	if err != nil {
 		t.Fatal(err)
@@ -61,7 +61,7 @@ func TestUnsupportedInputsCannotBecomeRunnableInventory(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			root, path := fixture(t, strings.Replace(string(data), tt.old, tt.new, 1))
 
-			got, err := Load(context.Background(), root, path)
+			got, err := Load(context.Background(), Request{Root: root, Pipeline: path})
 
 			if err != nil {
 				t.Fatal(err)
@@ -89,7 +89,7 @@ func TestDuplicateSourceIDsAreRejected(t *testing.T) {
 	text = strings.Replace(text, "name: build", "name: check", 1)
 	root, path := fixture(t, text)
 
-	if _, err := Load(context.Background(), root, path); err == nil {
+	if _, err := Load(context.Background(), Request{Root: root, Pipeline: path}); err == nil {
 		t.Fatal("duplicate source IDs were accepted")
 	}
 }

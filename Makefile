@@ -1,7 +1,7 @@
 GO ?= go
 GOLANGCI_LINT ?= golangci-lint
 
-.PHONY: build fmt-check lint test e2e
+.PHONY: build fmt-check lint test e2e real-e2e
 build:
 	$(GO) build -o bin/tkn-agent ./cmd/tkn-agent
 
@@ -16,3 +16,6 @@ test:
 
 e2e: build
 	$(GO) test -tags=e2e -count=1 -v ./test/e2e
+
+real-e2e: build
+	$(GO) test -tags=realrepo -count=1 -timeout=10m -v ./test/realrepo

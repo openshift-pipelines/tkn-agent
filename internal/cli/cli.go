@@ -74,6 +74,7 @@ func Run(ctx context.Context, args []string, streams IO) int {
 	flags.StringVar(&opts.checkout, "bind-checkout", "", "Explicitly provide TASK's reviewed self-checkout from the current worktree")
 	flags.StringArrayVar(&opts.parameters, "param", nil, "Bind a declared string parameter NAME=VALUE (repeatable)")
 	root.AddCommand(verify)
+	root.AddCommand(workupCommand(streams, &code))
 	root.SetArgs(args)
 	root.SetOut(streams.Out)
 	root.SetErr(streams.Err)

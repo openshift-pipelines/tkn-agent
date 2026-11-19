@@ -59,7 +59,7 @@ func Select(ctx context.Context, request Request) (result Result, resultErr erro
 	}
 	ctx, cancel := context.WithTimeout(ctx, 90*time.Second)
 	defer cancel()
-	llm, err := provider(ctx, request.Provider, request.Model)
+	llm, err := Provider(ctx, request.Provider, request.Model)
 	if err != nil {
 		return Result{}, fmt.Errorf("configure planner: %w", err)
 	}

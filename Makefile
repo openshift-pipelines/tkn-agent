@@ -1,7 +1,7 @@
 GO ?= go
 GOLANGCI_LINT ?= golangci-lint
 
-.PHONY: build fmt-check lint test e2e real-e2e
+.PHONY: build fmt-check lint test e2e real-e2e workup-live
 build:
 	$(GO) build -o bin/tkn-agent ./cmd/tkn-agent
 
@@ -19,3 +19,7 @@ e2e: build
 
 real-e2e: build
 	$(GO) test -tags=realrepo -count=1 -timeout=10m -v ./test/realrepo
+
+# Explicitly opted-in real model and Kubernetes evaluation; never ordinary CI.
+workup-live: build
+	$(GO) test -tags=workup_live -count=1 -v ./test/workup

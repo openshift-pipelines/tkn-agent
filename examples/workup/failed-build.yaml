@@ -1,0 +1,14 @@
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  generateName: workup-failed-build-
+  labels:
+    app.kubernetes.io/part-of: tkn-agent-workup-poc
+spec:
+  pipelineRef:
+    name: sample-build
+  taskRunTemplate:
+    serviceAccountName: workup-reader
+  params:
+    - name: BUILD_TARGET
+      value: ""
